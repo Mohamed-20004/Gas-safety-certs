@@ -108,9 +108,9 @@
         '<td>' + ((r.appliances || []).length) + '</td>' +
         '<td><span class="status-pill ' + s.cls + '">' + s.label + '</span></td>' +
         '<td class="right">' +
-          '<a class="btn small ghost" href="' + meta.form + '?id=' + encodeURIComponent(<r.id>) + '">Open</a> ' +
-          '<button class="btn small ghost" data-act="download" data-id="' + escapeHtml(<r.id>) + '">JSON</button> ' +
-          '<button class="btn small ghost" data-act="delete" data-id="' + escapeHtml(<r.id>) + '">Delete</button>' +
+          '<a class="btn small ghost" href="' + meta.form + '?id=' + encodeURIComponent(r.id) + '">Open</a> ' +
+          '<button class="btn small ghost" data-act="download" data-id="' + escapeHtml(r.id) + '">JSON</button> ' +
+          '<button class="btn small ghost" data-act="delete" data-id="' + escapeHtml(r.id) + '">Delete</button>' +
         '</td>' +
       '</tr>';
     }).join("");
@@ -134,13 +134,13 @@
     var id = btn.getAttribute("data-id");
     var act = btn.getAttribute("data-act");
     var records = loadAll();
-    var rec = records.filter(function (r) { return <r.id> === id; })[0];
+    var rec = records.filter(function (r) { return r.id === id; })[0];
     if (!rec) return;
     if (act === "download") {
       download(rec);
     } else if (act === "delete") {
       if (!confirm("Delete this record? This cannot be undone.")) return;
-      saveAll(records.filter(function (r) { return <r.id> !== id; }));
+      saveAll(records.filter(function (r) { return r.id !== id; }));
       render();
     }
   }
@@ -158,9 +158,9 @@
         try {
           var data = JSON.parse(ev.target.result);
           if (data && typeof data === "object") {
-            if (!<data.id>) <data.id> = "rec_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+            if (!data.id) data.id = "rec_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
             if (!data.type) data.type = recordType(data);
-            var idx = records.findIndex(function (r) { return <r.id> === <data.id>; });
+            var idx = records.findIndex(function (r) { return r.id === data.id; });
             if (idx >= 0) records[idx] = data;
             else records.push(data);
             imported++;

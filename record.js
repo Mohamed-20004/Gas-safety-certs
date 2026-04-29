@@ -253,7 +253,7 @@
   var pads = {};
 
   function collect() {
-    var data = { id: <state.id> || uid(), type: "non-domestic" };
+    var data = { id: state.id || uid(), type: "non-domestic" };
     new FormData(form).forEach(function (val, key) {
       if (key.indexOf("appliance.") === 0) return;
       data[key] = val;
@@ -269,7 +269,7 @@
 
   function populate(rec) {
     if (!rec) return;
-    <state.id> = <rec.id> || null;
+    state.id = rec.id || null;
     state.createdAt = rec.createdAt || null;
     state.checks = {
       meter: (rec.checks && rec.checks.meter) || {},
@@ -296,13 +296,13 @@
   function saveToStorage() {
     var rec = collect();
     var records = loadAll();
-    var idx = records.findIndex(function (r) { return <r.id> === <rec.id>; });
+    var idx = records.findIndex(function (r) { return r.id === rec.id; });
     if (idx >= 0) records[idx] = rec; else records.push(rec);
     saveAll(records);
-    <state.id> = <rec.id>;
+    state.id = rec.id;
     state.createdAt = rec.createdAt;
     if (window.history && window.history.replaceState) {
-      window.history.replaceState({}, "", window.location.pathname + "?id=" + encodeURIComponent(<rec.id>));
+      window.history.replaceState({}, "", window.location.pathname + "?id=" + encodeURIComponent(rec.id));
     }
     var original = saveBtn.textContent;
     saveBtn.textContent = "Saved ✓"; saveBtn.disabled = true;
@@ -312,10 +312,10 @@
   function downloadJson() {
     var rec = collect();
     var records = loadAll();
-    var idx = records.findIndex(function (r) { return <r.id> === <rec.id>; });
+    var idx = records.findIndex(function (r) { return r.id === rec.id; });
     if (idx >= 0) records[idx] = rec; else records.push(rec);
     saveAll(records);
-    <state.id> = <rec.id>;
+    state.id = rec.id;
     var blob = new Blob([JSON.stringify(rec, null, 2)], { type: "application/json" });
     var a = document.createElement("a");
     var slug = (rec.serialNumber || rec.siteName || "gas-safety-record")
@@ -349,7 +349,7 @@
     var today = new Date().toISOString().slice(0, 10);
     var id = getQueryParam("id");
     if (id) {
-      var rec = loadAll().filter(function (r) { return <r.id> === id; })[0];
+      var rec = loadAll().filter(function (r) { return r.id === id; })[0];
       if (rec) { populate(rec); return; }
     }
     document.getElementById("inspectionDate").value = today;

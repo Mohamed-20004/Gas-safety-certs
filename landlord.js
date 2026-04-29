@@ -315,7 +315,7 @@
 
   function collect() {
     var data = {
-      id: <state.id> || uid(), type: TYPE,
+      id: state.id || uid(), type: TYPE,
       createdAt: state.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -336,7 +336,7 @@
 
   function populate(rec) {
     if (!rec) return;
-    <state.id> = <rec.id> || null;
+    state.id = rec.id || null;
     state.createdAt = rec.createdAt || null;
     state.signatures = {
       issued: (rec.signatures && rec.signatures.issued) || "",
@@ -367,12 +367,12 @@
   function saveToStorage() {
     var rec = collect();
     var records = loadAll();
-    var idx = records.findIndex(function (r) { return <r.id> === <rec.id>; });
+    var idx = records.findIndex(function (r) { return r.id === rec.id; });
     if (idx >= 0) records[idx] = rec; else records.push(rec);
     saveAll(records);
-    <state.id> = <rec.id>; state.createdAt = rec.createdAt;
+    state.id = rec.id; state.createdAt = rec.createdAt;
     if (history && history.replaceState) {
-      history.replaceState({}, "", location.pathname + "?id=" + encodeURIComponent(<rec.id>));
+      history.replaceState({}, "", location.pathname + "?id=" + encodeURIComponent(rec.id));
     }
     var orig = saveBtn.textContent;
     saveBtn.textContent = "Saved ✓"; saveBtn.disabled = true;
@@ -382,10 +382,10 @@
   function downloadJson() {
     var rec = collect();
     var records = loadAll();
-    var idx = records.findIndex(function (r) { return <r.id> === <rec.id>; });
+    var idx = records.findIndex(function (r) { return r.id === rec.id; });
     if (idx >= 0) records[idx] = rec; else records.push(rec);
     saveAll(records);
-    <state.id> = <rec.id>;
+    state.id = rec.id;
     var blob = new Blob([JSON.stringify(rec, null, 2)], { type: "application/json" });
     var a = document.createElement("a");
     var slug = (rec.serialNumber || rec.installationAddress || "landlord-gas-safety-record")
@@ -418,7 +418,7 @@
     var today = new Date().toISOString().slice(0, 10);
     var id = getQueryParam("id");
     if (id) {
-      var rec = loadAll().filter(function (r) { return <r.id> === id; })[0];
+      var rec = loadAll().filter(function (r) { return r.id === id; })[0];
       if (rec) { populate(rec); return; }
     }
     document.getElementById("dateField").value = today;
