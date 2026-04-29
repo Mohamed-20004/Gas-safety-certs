@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gas Safety Records</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="bar">
+  <h1>Gas Safety Records</h1>
+</header>
+
+<main class="wrap">
+  <section class="panel">
+    <div class="row-between">
+      <h2>Dashboard</h2>
+      <div class="actions">
+        <a class="btn primary" href="landlord.html">+ Landlord / Homeowner</a>
+        <a class="btn primary" href="record.html">+ Non-Domestic</a>
+        <label class="btn" for="importFile">Import JSON</label>
+        <input id="importFile" type="file" accept="application/json" multiple hidden>
+      </div>
+    </div>
+    <p class="muted">Records are stored locally in this browser. Use <em>Download JSON</em> on a record to export it. Import JSON files above to view or edit.</p>
+  </section>
+
+  <section class="panel">
+    <div class="row-between">
+      <h3>Saved records</h3>
+      <div class="actions">
+        <select id="typeFilter" class="input">
+          <option value="">All types</option>
+          <option value="landlord-homeowner">Landlord / Homeowner</option>
+          <option value="non-domestic">Non-Domestic</option>
+        </select>
+        <input id="search" class="input" type="search" placeholder="Search address, engineer, serial..." aria-label="Search records">
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="data">
+        <thead>
+          <tr>
+            <th>Serial No.</th>
+            <th>Type</th>
+            <th>Site / Address</th>
+            <th>Date</th>
+            <th>Engineer</th>
+            <th>Appliances</th>
+            <th>Status</th>
+            <th class="right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="recordRows">
+          <tr><td colspan="8" class="muted center">No records yet. Click <strong>+ Landlord / Homeowner</strong> or <strong>+ Non-Domestic</strong> to create one.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer class="bar foot">
+  <span class="muted">Client-side only. No data leaves your device.</span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
