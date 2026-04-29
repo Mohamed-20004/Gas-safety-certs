@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gas Safety Record</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="bar">
+  <h1>Non-Domestic Gas Installation Safety Record</h1>
+</header>
+
+<div class="toolbar">
+  <a class="btn ghost" href="index.html">&larr; Dashboard</a>
+  <button class="btn primary" id="saveBtn">Save</button>
+  <button class="btn" id="downloadBtn">Download JSON</button>
+  <button class="btn ghost" id="printBtn">Print</button>
+  <button class="btn ghost" id="newBtn">New</button>
+</div>
+
+<main class="wrap">
+  <form id="recordForm" autocomplete="off">
+    <section class="section">
+      <div class="section-head"><h3>Record Details</h3></div>
+      <div class="section-body grid three">
+        <div class="field">
+          <label for="serialNumber">Serial / Certificate No.</label>
+          <input class="input" id="serialNumber" name="serialNumber" type="text">
+        </div>
+        <div class="field">
+          <label for="inspectionDate">Inspection Date</label>
+          <input class="input" id="inspectionDate" name="inspectionDate" type="date">
+        </div>
+        <div class="field">
+          <label for="nextInspection">Next Inspection Date</label>
+          <input class="input" id="nextInspection" name="nextInspection" type="date">
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h3>Site &amp; Client</h3></div>
+      <div class="section-body grid">
+        <div class="field"><label for="siteName">Site / Business Name</label><input class="input" id="siteName" name="siteName" type="text"></div>
+        <div class="field"><label for="siteContact">Site Contact</label><input class="input" id="siteContact" name="siteContact" type="text"></div>
+        <div class="field full"><label for="siteAddress">Site Address</label><textarea id="siteAddress" name="siteAddress"></textarea></div>
+        <div class="field"><label for="sitePhone">Site Phone</label><input class="input" id="sitePhone" name="sitePhone" type="tel"></div>
+        <div class="field"><label for="siteEmail">Site Email</label><input class="input" id="siteEmail" name="siteEmail" type="email"></div>
+        <div class="field"><label for="clientName">Client / Landlord Name</label><input class="input" id="clientName" name="clientName" type="text"></div>
+        <div class="field full"><label for="clientAddress">Client / Landlord Address</label><textarea id="clientAddress" name="clientAddress"></textarea></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h3>Engineer</h3></div>
+      <div class="section-body grid">
+        <div class="field"><label for="engineerName">Engineer Name</label><input class="input" id="engineerName" name="engineerName" type="text"></div>
+        <div class="field"><label for="engineerCompany">Company</label><input class="input" id="engineerCompany" name="engineerCompany" type="text"></div>
+        <div class="field"><label for="gasSafeRegNo">Gas Safe Registration No.</label><input class="input" id="gasSafeRegNo" name="gasSafeRegNo" type="text"></div>
+        <div class="field"><label for="gasSafeIdNo">Gas Safe ID Card No.</label><input class="input" id="gasSafeIdNo" name="gasSafeIdNo" type="text"></div>
+        <div class="field full"><label for="engineerAddress">Company Address</label><textarea id="engineerAddress" name="engineerAddress"></textarea></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h3>Appliance Details</h3></div>
+      <div class="section-body">
+        <div style="overflow-x:auto; margin-bottom:10px;">
+          <table class="appl-table" id="applianceTable">
+            <thead>
+              <tr>
+                <th style="min-width:90px;">Location</th>
+                <th style="min-width:110px;">Appliance Type</th>
+                <th style="min-width:120px;">Make / Model</th>
+                <th style="min-width:70px;">Owned By</th>
+                <th style="min-width:75px;">Inspected</th>
+                <th style="min-width:110px;">Flue Type</th>
+                <th style="min-width:95px;">Op. Pressure / Heat Input</th>
+                <th style="min-width:85px;">Safety Device Correct</th>
+                <th style="min-width:85px;">Ventilation Adequate</th>
+                <th style="min-width:85px;">Flue Flow Test</th>
+                <th style="min-width:80px;">Spillage Test</th>
+                <th style="min-width:100px;">Combustion Reading (CO/CO2 ratio)</th>
+                <th style="min-width:85px;">Serviced</th>
+                <th style="min-width:70px;">Status</th>
+                <th style="min-width:30px;"></th>
+              </tr>
+            </thead>
+            <tbody id="applianceBody"></tbody>
+          </table>
+        </div>
+        <button type="button" class="btn" id="addApplianceBtn">+ Add appliance</button>
+        <p class="muted" style="margin-top:8px; font-size:12px;">N/I = Not Inspected. N/A = Not Applicable. If an appliance is deemed immediately dangerous or at risk, record it in the remedial actions section below.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h3>Work / Inspection Details</h3></div>
+      <div class="section-body grid">
+        <div class="field">
+          <label for="visitType">Visit Type</label>
+          <select id="visitType" name="visitType">
+            <option value="">—</option><option>Annual Safety Inspection</option><option>Installation Commissioning</option>
+            <option>Service</option><option>Breakdown / Repair</option><option>Tightness Test</option><option>Other</option>
+          </select>
+        </div>
+        <div class="field"><label for="timeOnSite">Time on Site</label><input class="input" id="timeOnSite" name="timeOnSite" type="text" placeholder="e.g. 09:00 – 11:30"></div>
+        <div class="field full"><label for="workDescription">Description of Work Carried Out</label><textarea id="workDescription" name="workDescription" rows="4"></textarea></div>
+        <div class="field full"><label for="remedialActions">Remedial / Defects / Warning Notices Issued</label><textarea id="remedialActions" name="remedialActions" rows="3"></textarea></div>
+        <div class="field full"><label for="partsUsed">Parts Used</label><textarea id="partsUsed" name="partsUsed" rows="2"></textarea></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h3>Meter Installation Checks</h3></div>
+      <div class="section-body">
+        <div class="grid">
+          <div class="field"><label for="meterLocation">Meter Location</label><input class="input" id="meterLocation" name="meterLocation" type="text"></div>
+          <div class="field"><label for="meterSerial">Meter Serial No.</label><input class="input" id="meterSerial" name="meterSerial" type="text"></div>
+          <div class="field"><label for="meterType">Meter Type</label><input class="input" id="meterType" name="meterType" type="text" placeholder="U6 / U16 / other"></div>
+          <div class="field"><label for="meterReading">Meter Reading</label><input class="input" id="meterReading" name="meterReading" type="text"></div>
+          <div class="field">
+            <label for="gasType">Gas Type</label>
+            <select id="gasType" name="gasType"><option value="">—</option><option>Natural Gas</option><option>LPG</option><option>Other</option></select>
+          </div>
+          <div class="field"><label for="operatingPressure">Operating Pressure (mbar)</label><input class="input" id="operatingPressure" name="operatingPressure" type="text"></div>
+        </div>
+        <div style="margin-top:12px;" id="meterChecks"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h3>Installation Pipework Checks</h3></div>
+      <div class="section-body">
+        <div class="grid">
+          <div class="field"><label for="pipeworkMaterial">Pipework Material</label><input class="input" id="pipeworkMaterial" name="pipeworkMaterial" type="text" placeholder="Copper / Steel / Mixed"></div>
+          <div class="field"><label for="pipeworkSize">Pipework Size(s)</label><input class="input" id="pipeworkSize" name="pipeworkSize" type="text"></div>
+          <div class="field"><label for="testPressure">Test Pressure (mbar)</label><input class="input" id="testPressure" name="testPressure" type="text"></div>
+          <div class="field"><label for="testDuration">Test Duration</label><input class="input" id="testDuration" name="testDuration" type="text" placeholder="e.g. 5 minutes stabilisation + 2 minutes test"></div>
+          <div class="field"><label for="letByTest">Let-By Test Result</label><input class="input" id="letByTest" name="letByTest" type="text" placeholder="Pass / Fail / pressure drop"></div>
+          <div class="field"><label for="tightnessTest">Tightness Test Result</label><input class="input" id="tightnessTest" name="tightnessTest" type="text" placeholder="Pass / Fail / pressure drop"></div>
+        </div>
+        <div style="margin-top:12px;" id="pipeworkChecks"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h3>Declaration of Gas Safety</h3></div>
+      <div class="section-body">
+        <div class="declaration" id="declarationText">
+          I, the Gas Safe registered engineer named below, certify that the gas installation and appliances listed on this record have been inspected and tested in accordance with the Gas Safety (Installation and Use) Regulations 1998, the current edition of IGEM/UP/1B (non-domestic tightness testing and purging) and the manufacturer's instructions. The results of all tests and visual inspections carried out are recorded above. Any defects, "At Risk" or "Immediately Dangerous" situations identified have been brought to the attention of the responsible person and, where required, a Warning / Advice Notice has been issued. This record is a true statement of the condition of the installation at the time of inspection.
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h3>Signatures</h3></div>
+      <div class="section-body">
+        <div class="sig-pair">
+          <div class="sig-block">
+            <div class="sig-title">
+              <h4>Issued By (Engineer)</h4>
+              <button type="button" class="btn small ghost" data-clear-sig="issued">Clear</button>
+            </div>
+            <div class="grid">
+              <div class="field"><label for="issuedName">Full Name</label><input class="input" id="issuedName" name="issuedName" type="text"></div>
+              <div class="field"><label for="issuedDate">Date</label><input class="input" id="issuedDate" name="issuedDate" type="date"></div>
+            </div>
+            <div class="sig-canvas-wrap" data-sig="issued">
+              <canvas class="sig-canvas" data-sig-canvas="issued"></canvas>
+              <div class="sig-placeholder" data-sig-placeholder="issued">Sign here</div>
+            </div>
+          </div>
+          <div class="sig-block">
+            <div class="sig-title">
+              <h4>Received By (Responsible Person)</h4>
+              <button type="button" class="btn small ghost" data-clear-sig="received">Clear</button>
+            </div>
+            <div class="grid">
+              <div class="field"><label for="receivedName">Full Name</label><input class="input" id="receivedName" name="receivedName" type="text"></div>
+              <div class="field"><label for="receivedDate">Date</label><input class="input" id="receivedDate" name="receivedDate" type="date"></div>
+            </div>
+            <div class="sig-canvas-wrap" data-sig="received">
+              <canvas class="sig-canvas" data-sig-canvas="received"></canvas>
+              <div class="sig-placeholder" data-sig-placeholder="received">Sign here</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </form>
+</main>
+
+<footer class="bar foot">
+  <span class="muted">All data is stored locally in this browser. Use Download JSON for a portable copy.</span>
+</footer>
+
+<script src="record.js"></script>
+</body>
+</html>
