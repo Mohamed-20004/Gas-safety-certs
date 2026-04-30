@@ -56,7 +56,7 @@
 
       <div class="ll-banner-right">
         <div class="ll-meta">
-          <div class="ll-meta-cell"><label>Date</label><input type="date" name="date" id="dateField"></div>
+          <div class="ll-meta-cell"><label>Date</label><input type="text" name="date" id="dateField" placeholder="DD/MM/YYYY" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}"></div>
           <div class="ll-meta-cell"><label>Gas Safe Register No</label><input type="text" name="gasSafeRegNo" id="gasSafeRegNo" value="630695"></div>
           <div class="ll-meta-cell"><label>Gas Safe Register Licence Number</label><input type="text" name="licenceNumber" id="licenceNumber" value="5794937"></div>
           <div class="ll-meta-cell"><label>Serial No</label><input type="text" name="serialNumber" id="serialNumber"></div>
@@ -175,7 +175,7 @@
         <div class="ll-attention-head">ATTENTION</div>
         <div class="ll-attention-body">
           <label>Next safety check due by:</label>
-          <input type="date" name="nextSafetyCheck">
+          <input type="text" name="nextSafetyCheck" placeholder="DD/MM/YYYY" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}">
         </div>
       </div>
     </section>

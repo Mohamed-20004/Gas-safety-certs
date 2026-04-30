@@ -500,13 +500,27 @@
 
     enableColumnResize(".ll-appl-table");
     enableColumnResize(".ll-pipe-table");
-    var today = new Date().toISOString().slice(0, 10);
+
+    document.querySelectorAll('input[pattern="\\d{2}/\\d{2}/\\d{4}"]').forEach(function (el) {
+      el.addEventListener("input", function () {
+        var digits = el.value.replace(/\D/g, "").slice(0, 8);
+        var out = digits;
+        if (digits.length > 4) out = digits.slice(0, 2) + "/" + digits.slice(2, 4) + "/" + digits.slice(4);
+        else if (digits.length > 2) out = digits.slice(0, 2) + "/" + digits.slice(2);
+        el.value = out;
+      });
+    });
+
+    var d = new Date();
+    var todayDDMM = String(d.getDate()).padStart(2, "0") + "/" +
+                    String(d.getMonth() + 1).padStart(2, "0") + "/" +
+                    d.getFullYear();
     var id = getQueryParam("id");
     if (id) {
       var rec = loadAll().filter(function (r) { return r.id === id; })[0];
       if (rec) { populate(rec); return; }
     }
-    document.getElementById("dateField").value = today;
+    document.getElementById("dateField").value = todayDDMM;
     for (var i = 0; i < 5; i++) addApplianceRow();
   });
 })();
