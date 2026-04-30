@@ -240,11 +240,12 @@ html { scroll-behavior: smooth; }
 
 /* Section grids — every block sits on the yellow page bg with the gap visible */
 .ll-row { display: grid; gap: 5px; padding: 5px 5px 0; background: var(--ll-page); }
-.ll-row:last-of-type { padding-bottom: 5px; }
+.ll-row.ll-bottom { padding-bottom: 5px; }
 .ll-three { grid-template-columns: 1fr 1fr 1fr; }
 .ll-work { grid-template-columns: 4fr 1fr; }
 .ll-defects-pipe { grid-template-columns: 1.1fr 2fr; }
-.ll-bottom { grid-template-columns: 1.2fr 1.5fr 0.5fr; }
+.ll-bottom { grid-template-columns: 1fr 200px; }
+.ll-right-stack { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
 
 .ll-block {
   background: #fff; border: 1px solid #c9c9c9;
@@ -279,18 +280,22 @@ html { scroll-behavior: smooth; }
 
 /* DEFECTS table — last column is a thick-bordered "Warning notice" box */
 .ll-defects-table { width: 100%; border-collapse: collapse; }
-.ll-defects-table tr td { border-bottom: 1px solid var(--ll-line); padding: 0; }
+.ll-defects-table tr td { border-bottom: 1px solid var(--ll-line); padding: 0; vertical-align: middle; }
 .ll-defects-table tr:last-child td { border-bottom: none; }
 .ll-defects-table .num { width: 26px; text-align: center; font-weight: 700; background: #fff; border-right: 1px solid var(--ll-line); font-size: 12px; color: #000; }
-.ll-defects-table input[type="text"] { border: 0; width: 100%; padding: 6px 9px; font-size: 12px; font-family: inherit; background: #fff; }
-.ll-defects-table input[type="text"]:focus { outline: none; box-shadow: inset 0 0 0 2px #000; }
-.ll-defects-table .warn-cell { width: 90px; padding: 0; text-align: center;
+.ll-defects-table textarea {
+  border: 0; width: 100%; padding: 2px 9px; font-size: 12px; font-family: inherit;
+  background: #fff; resize: vertical; min-height: 20px; height: 22px;
+  display: block; line-height: 1.35;
+}
+.ll-defects-table textarea:focus { outline: none; box-shadow: inset 0 0 0 2px #000; }
+.ll-defects-table .warn-cell { width: 80px; padding: 0; text-align: center;
   border-left: 2px solid #000; border-right: 2px solid #000;
   border-bottom: 1px solid #000;
 }
 .ll-defects-table tr:first-child .warn-cell { border-top: 2px solid #000; }
 .ll-defects-table tr:last-child .warn-cell { border-bottom: 2px solid #000; }
-.ll-defects-table .warn-cell select { border: 0; width: 100%; padding: 6px 4px; font-size: 11px; background: #fff; text-align: center; }
+.ll-defects-table .warn-cell select { border: 0; width: 100%; padding: 2px 4px; font-size: 11px; background: #fff; text-align: center; height: 100%; }
 
 /* Pipework: header strip then 5 cells with light gray headers above each value */
 .ll-pipe-table { width: 100%; border-collapse: collapse; table-layout: fixed; }

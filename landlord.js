@@ -58,7 +58,7 @@
       var tr = document.createElement("tr");
       tr.innerHTML =
         '<td class="num">' + i + '</td>' +
-        '<td><input type="text" name="defect.text.' + i + '"></td>' +
+        '<td><textarea rows="1" name="defect.text.' + i + '"></textarea></td>' +
         '<td class="warn-cell"><select name="defect.warn.' + i + '"><option></option><option>Yes</option><option>No</option></select></td>';
       defectsBody.appendChild(tr);
     }
@@ -66,7 +66,7 @@
   function readDefects() {
     var out = [];
     for (var i = 1; i <= DEFECT_ROWS; i++) {
-      var t = form.querySelector('input[name="defect.text.' + i + '"]');
+      var t = form.querySelector('[name="defect.text.' + i + '"]');
       var w = form.querySelector('select[name="defect.warn.' + i + '"]');
       out.push({ n: i, text: t ? t.value : "", warningNotice: w ? w.value : "" });
     }
@@ -75,7 +75,7 @@
   function writeDefects(defects) {
     if (!Array.isArray(defects)) return;
     defects.forEach(function (d) {
-      var t = form.querySelector('input[name="defect.text.' + d.n + '"]');
+      var t = form.querySelector('[name="defect.text.' + d.n + '"]');
       var w = form.querySelector('select[name="defect.warn.' + d.n + '"]');
       if (t) t.value = d.text || "";
       if (w) w.value = d.warningNotice || "";
