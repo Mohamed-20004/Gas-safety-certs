@@ -5,32 +5,57 @@
   var DENSITY_KEY = "gsr.record.density";
   var COL_KEY = "gsr.record.colWidths";
 
-  var APPLIANCE_FIELDS = ["location", "type", "make", "model", "flueType", "operatingPressure"];
+  // Appliance columns: 8 free-text + 5 selects (last one Pass/N/A, rest Yes/No/N/A)
+  var APPLIANCE_FIELDS = [
+    { key: "location",         type: "text" },
+    { key: "applianceType",    type: "text" },
+    { key: "make",             type: "text" },
+    { key: "model",            type: "text" },
+    { key: "flueType",         type: "text" },
+    { key: "operatingPressure",type: "text" },
+    { key: "heatInput",        type: "text" },
+    { key: "combustion",       type: "text" },
+    { key: "safetyDevice",     type: "yn" },
+    { key: "ventilation",      type: "yn" },
+    { key: "chimneyCondition", type: "yn" },
+    { key: "fluePerformance",  type: "ps" },
+    { key: "safeToUse",        type: "yn" }
+  ];
+  var WORK_FIELDS = [
+    { key: "workCarriedOut",   type: "text" },
+    { key: "remedialRequired", type: "text" },
+    { key: "warningNotice",    type: "yn" }
+  ];
+
+  var YN_OPTS = ["", "Yes", "No", "N/A"];
+  var PS_OPTS = ["", "Pass", "N/A"];
   var DEFAULT_APPLIANCE_ROWS = 8;
   var DEFAULT_WORK_ROWS = 8;
 
   var METER_CHECK_ITEMS = [
-    { key: "ecvAccessible", label: "Is meter installation accessible?" },
-    { key: "ecvHandle", label: "ECV handle secure & operates freely?" },
-    { key: "regulator", label: "Regulator in good condition & sealed?" },
-    { key: "meterCondition", label: "Meter & meter box in satisfactory condition?" },
-    { key: "electricalBonding", label: "Equipotential bonding present & continuous (10 mm² min)?" },
-    { key: "warningLabel", label: "Emergency contact / gas escape label displayed?" },
-    { key: "meterVentilation", label: "Meter compartment ventilation adequate?" }
+    { key: "meterAccessible", label: "Is meter installation accessible?" },
+    { key: "meterSupported",  label: "Is the meter adequately supported?" },
+    { key: "ecvAccessible",   label: "Is the emergency control valve: a. accessible?" },
+    { key: "ecvHandle",       label: "   b. fitted with a handle?" },
+    { key: "ecvLabel",        label: "   c. labeled with direction of operation?" },
+    { key: "ecvNotice",       label: "   d. complete with emergency notice?" },
+    { key: "roomVent",        label: "Is the meter room/compartment: a. adequately ventilated?" },
+    { key: "roomSecure",      label: "   b. secure?" },
+    { key: "roomClear",       label: "   c. clear of combustibles etc?" },
+    { key: "roomKey",         label: "   d. lock key clearly labeled?" }
   ];
-
   var PIPEWORK_CHECK_ITEMS = [
-    { key: "diagram", label: "Is a gas installation line diagram fixed near the primary meter?" },
-    { key: "visualInspection", label: "Visual inspection of pipework satisfactory?" },
-    { key: "supports", label: "Pipework adequately supported & protected?" },
-    { key: "sleeving", label: "Pipework through walls/floors correctly sleeved?" },
-    { key: "bonding", label: "Main equipotential bonding continuous?" },
-    { key: "tightnessTest", label: "Tightness test completed per IGEM/UP/1B?" },
-    { key: "purgeComplete", label: "Purge completed & recorded?" },
-    { key: "emergencyIsolation", label: "Emergency isolation valves accessible & labelled?" }
+    { key: "diagramFixed",   label: "Is a gas installation line diagram fixed near the primary meter?" },
+    { key: "diagramCurrent", label: "Is a gas installation line diagram current?" },
+    { key: "valvesFitted",   label: "Are adequate emergency/isolation valves: a. fitted?" },
+    { key: "valvesHandles",  label: "   b. handles in place and suitably labeled?" },
+    { key: "pipeSupported",  label: "Is the gas pipework adequately supported?" },
+    { key: "pipeDucts",      label: "Is the gas pipework in ducts adequately ventilated?" },
+    { key: "pipeCoded",      label: "Is the gas pipework colour coded/identified?" },
+    { key: "bonded",         label: "Is the gas installation electrically bonded?" },
+    { key: "sleeved",        label: "Is pipework suitably sleeved and sealed as appropriate?" },
+    { key: "tightness",      label: "Has a gas strength/tightness test been carried out?" }
   ];
-
-  var YESNO_NA = ["", "Yes", "No", "N/A"];
 
   var form = document.getElementById("recordForm");
   var saveBtn = document.getElementById("saveBtn");
@@ -43,13 +68,13 @@
   var removeWorkBtn = document.getElementById("removeWorkBtn");
   var applianceBody = document.getElementById("applianceBody");
   var workBody = document.getElementById("workBody");
-  var remedialBody = document.getElementById("remedialBody");
   var meterChecksEl = document.getElementById("meterChecks");
   var pipeworkChecksEl = document.getElementById("pipeworkChecks");
   var logoFileInput = document.getElementById("logoFile");
   var logoResetBtn = document.getElementById("logoReset");
   var logoImg = document.getElementById("logoImg");
-  var logoDefault = document.getElementById("logoDefault");
+  var logoHint = document.getElementById("logoHint");
+  var logoBox = document.getElementById("logoBox");
 
   var state = {
     id: null, createdAt: null,
@@ -70,111 +95,118 @@
     return m ? decodeURIComponent(m[1]) : null;
   }
 
-  function refreshApplianceNumbers() {
-    Array.from(applianceBody.querySelectorAll("tr")).forEach(function (tr, i) {
-      var num = tr.querySelector(".rec-num");
+  function renumberRows(body) {
+    Array.from(body.querySelectorAll("tr")).forEach(function (tr, i) {
+      var num = tr.querySelector(".rec-num-cell");
       if (num) num.textContent = i + 1;
     });
   }
-  function refreshWorkNumbers(body) {
-    Array.from(body.querySelectorAll("tr")).forEach(function (tr, i) {
-      var num = tr.querySelector(".rec-num");
-      if (num) num.textContent = i + 1;
+
+  function buildSelect(opts, value) {
+    var sel = document.createElement("select");
+    opts.forEach(function (o) {
+      var opt = document.createElement("option");
+      opt.value = o; opt.textContent = o || "—";
+      if (o === value) opt.selected = true;
+      sel.appendChild(opt);
     });
+    return sel;
   }
 
   function addApplianceRow(data) {
     data = data || {};
     var tr = document.createElement("tr");
-    var numTd = document.createElement("td");
-    numTd.className = "rec-num";
-    tr.appendChild(numTd);
-    APPLIANCE_FIELDS.forEach(function (field) {
+    var num = document.createElement("td");
+    num.className = "rec-num-cell";
+    tr.appendChild(num);
+    APPLIANCE_FIELDS.forEach(function (f) {
       var td = document.createElement("td");
-      var ta = document.createElement("textarea");
-      ta.rows = 1;
-      ta.name = "appliance." + field;
-      ta.value = data[field] || "";
-      td.appendChild(ta);
+      var ctrl;
+      if (f.type === "yn")      ctrl = buildSelect(YN_OPTS, data[f.key]);
+      else if (f.type === "ps") ctrl = buildSelect(PS_OPTS, data[f.key]);
+      else {
+        ctrl = document.createElement("textarea");
+        ctrl.rows = 1;
+        ctrl.value = data[f.key] || "";
+      }
+      ctrl.name = "appliance." + f.key;
+      td.appendChild(ctrl);
       tr.appendChild(td);
     });
     applianceBody.appendChild(tr);
-    refreshApplianceNumbers();
+    renumberRows(applianceBody);
   }
   function removeApplianceRow() {
     var rows = applianceBody.querySelectorAll("tr");
     if (rows.length <= 1) return;
     rows[rows.length - 1].remove();
-    refreshApplianceNumbers();
+    renumberRows(applianceBody);
   }
   function readAppliances() {
     return Array.from(applianceBody.querySelectorAll("tr")).map(function (tr) {
       var obj = {};
-      APPLIANCE_FIELDS.forEach(function (field, i) {
+      APPLIANCE_FIELDS.forEach(function (f, i) {
         var cell = tr.children[i + 1];
-        var input = cell.querySelector("textarea, input");
-        obj[field] = input ? input.value : "";
+        var input = cell.querySelector("textarea, input, select");
+        obj[f.key] = input ? input.value : "";
       });
       return obj;
     });
   }
 
-  function addWorkRow(body, prefix, data) {
-    data = data || "";
+  function addWorkRow(data) {
+    data = data || {};
     var tr = document.createElement("tr");
-    var numTd = document.createElement("td");
-    numTd.className = "rec-num";
-    tr.appendChild(numTd);
-    var td = document.createElement("td");
-    var ta = document.createElement("textarea");
-    ta.rows = 1;
-    ta.name = prefix + "." + (body.children.length + 1);
-    ta.value = data;
-    td.appendChild(ta);
-    tr.appendChild(td);
-    body.appendChild(tr);
-    refreshWorkNumbers(body);
+    var num = document.createElement("td");
+    num.className = "rec-num-cell";
+    tr.appendChild(num);
+    WORK_FIELDS.forEach(function (f) {
+      var td = document.createElement("td");
+      var ctrl;
+      if (f.type === "yn") ctrl = buildSelect(YN_OPTS, data[f.key]);
+      else {
+        ctrl = document.createElement("textarea");
+        ctrl.rows = 1;
+        ctrl.value = data[f.key] || "";
+      }
+      ctrl.name = "work." + f.key;
+      td.appendChild(ctrl);
+      tr.appendChild(td);
+    });
+    workBody.appendChild(tr);
+    renumberRows(workBody);
   }
-  function removeWorkRow(body) {
-    var rows = body.querySelectorAll("tr");
+  function removeWorkRow() {
+    var rows = workBody.querySelectorAll("tr");
     if (rows.length <= 1) return;
     rows[rows.length - 1].remove();
-    refreshWorkNumbers(body);
+    renumberRows(workBody);
   }
-  function readWork(body) {
-    return Array.from(body.querySelectorAll("tr")).map(function (tr) {
-      var ta = tr.querySelector("textarea");
-      return ta ? ta.value : "";
+  function readWork() {
+    return Array.from(workBody.querySelectorAll("tr")).map(function (tr) {
+      var obj = {};
+      WORK_FIELDS.forEach(function (f, i) {
+        var cell = tr.children[i + 1];
+        var input = cell.querySelector("textarea, input, select");
+        obj[f.key] = input ? input.value : "";
+      });
+      return obj;
     });
-  }
-  function writeWork(body, list) {
-    body.innerHTML = "";
-    var prefix = body.id === "workBody" ? "work" : "remedial";
-    if (Array.isArray(list) && list.length) {
-      list.forEach(function (val) { addWorkRow(body, prefix, val); });
-    } else {
-      for (var i = 0; i < DEFAULT_WORK_ROWS; i++) addWorkRow(body, prefix, "");
-    }
   }
 
   function renderCheckList(container, items, stateKey) {
     container.innerHTML = "";
     items.forEach(function (item) {
       var row = document.createElement("div");
-      row.className = "rec-qa-row";
-      var label = document.createElement("div");
-      label.className = "rec-qa-label";
+      row.className = "rec-check-row";
+      var label = document.createElement("label");
       label.textContent = item.label;
-      var sel = document.createElement("select");
+      var sel = buildSelect(YN_OPTS, (state.checks[stateKey] || {})[item.key]);
       sel.setAttribute("data-check", stateKey + "." + item.key);
-      YESNO_NA.forEach(function (opt) {
-        var o = document.createElement("option");
-        o.value = opt; o.textContent = opt || "—";
-        sel.appendChild(o);
+      sel.addEventListener("change", function () {
+        if (!state.checks[stateKey]) state.checks[stateKey] = {};
+        state.checks[stateKey][item.key] = sel.value;
       });
-      var current = (state.checks[stateKey] || {})[item.key];
-      if (current) sel.value = current;
-      sel.addEventListener("change", function () { state.checks[stateKey][item.key] = sel.value; });
       row.appendChild(label);
       row.appendChild(sel);
       container.appendChild(row);
@@ -204,7 +236,7 @@
       canvas.width = Math.max(1, Math.floor(rect.width * ratio));
       canvas.height = Math.max(1, Math.floor(rect.height * ratio));
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-      ctx.lineWidth = 2; ctx.lineCap = "round"; ctx.lineJoin = "round";
+      ctx.lineWidth = 1.5; ctx.lineCap = "round"; ctx.lineJoin = "round";
       ctx.strokeStyle = "#000";
       redraw();
     }
@@ -274,23 +306,24 @@
   function setLogoDataUrl(dataUrl) {
     state.logoDataUrl = dataUrl || "";
     if (dataUrl) {
-      logoImg.src = dataUrl; logoImg.hidden = false; logoDefault.style.display = "none";
+      logoImg.src = dataUrl; logoImg.hidden = false;
+      if (logoHint) logoHint.style.display = "none";
+      logoBox.classList.add("has-logo");
     } else {
-      logoImg.removeAttribute("src"); logoImg.hidden = true; logoDefault.style.display = "";
+      logoImg.removeAttribute("src"); logoImg.hidden = true;
+      if (logoHint) logoHint.style.display = "";
+      logoBox.classList.remove("has-logo");
     }
   }
 
   function collect() {
     var data = { id: state.id || uid(), type: "non-domestic" };
     new FormData(form).forEach(function (val, key) {
-      if (key.indexOf("appliance.") === 0) return;
-      if (key.indexOf("work.") === 0) return;
-      if (key.indexOf("remedial.") === 0) return;
+      if (/^(appliance|work)\./.test(key)) return;
       data[key] = val;
     });
     data.appliances = readAppliances();
-    data.workCarriedOut = readWork(workBody);
-    data.remedialWork = readWork(remedialBody);
+    data.workEntries = readWork();
     data.checks = { meter: readChecks(meterChecksEl, "meter"), pipework: readChecks(pipeworkChecksEl, "pipework") };
     data.signatures = { issued: state.signatures.issued || "", received: state.signatures.received || "" };
     data.logoDataUrl = state.logoDataUrl || "";
@@ -315,18 +348,20 @@
 
     Array.from(form.elements).forEach(function (el) {
       if (!el.name) return;
-      if (/^(appliance|work|remedial)\./.test(el.name)) return;
+      if (/^(appliance|work)\./.test(el.name)) return;
       if (el.type === "file") return;
       if (rec[el.name] != null) el.value = rec[el.name];
     });
 
     applianceBody.innerHTML = "";
     var apps = Array.isArray(rec.appliances) ? rec.appliances : [];
-    if (apps.length) apps.forEach(function (a) { addApplianceRow(a); });
+    if (apps.length) apps.forEach(addApplianceRow);
     else for (var i = 0; i < DEFAULT_APPLIANCE_ROWS; i++) addApplianceRow();
 
-    writeWork(workBody, rec.workCarriedOut);
-    writeWork(remedialBody, rec.remedialWork);
+    workBody.innerHTML = "";
+    var works = Array.isArray(rec.workEntries) ? rec.workEntries : [];
+    if (works.length) works.forEach(addWorkRow);
+    else for (var j = 0; j < DEFAULT_WORK_ROWS; j++) addWorkRow();
 
     renderCheckList(meterChecksEl, METER_CHECK_ITEMS, "meter");
     renderCheckList(pipeworkChecksEl, PIPEWORK_CHECK_ITEMS, "pipework");
@@ -351,7 +386,6 @@
     saveBtn.textContent = "Saved ✓"; saveBtn.disabled = true;
     setTimeout(function () { saveBtn.textContent = orig; saveBtn.disabled = false; }, 1200);
   }
-
   function downloadJson() {
     var rec = collect();
     var records = loadAll();
@@ -398,7 +432,7 @@
       if (savedRow[i]) th.style.width = savedRow[i] + "px";
       if (i === ths.length - 1) return;
       var handle = document.createElement("span");
-      handle.className = "rec-resize-handle";
+      handle.className = "rec-resizer";
       th.appendChild(handle);
       handle.addEventListener("mousedown", function (e) {
         e.preventDefault(); e.stopPropagation();
@@ -406,7 +440,7 @@
         var startX = e.clientX;
         var startW = th.getBoundingClientRect().width;
         function onMove(ev) {
-          var w = Math.max(40, startW + (ev.clientX - startX));
+          var w = Math.max(24, startW + (ev.clientX - startX));
           th.style.width = w + "px";
         }
         function onUp() {
@@ -424,7 +458,7 @@
   }
   function resetColumnWidths() {
     try { localStorage.removeItem(COL_KEY); } catch (e) {}
-    document.querySelectorAll(".rec-appl-table thead th").forEach(function (th) { th.style.width = ""; });
+    document.querySelectorAll(".rec-appliance-table thead th, .rec-work-table thead th").forEach(function (th) { th.style.width = ""; });
   }
 
   function todayDDMM() {
@@ -432,6 +466,15 @@
     return String(d.getDate()).padStart(2, "0") + "/" +
            String(d.getMonth() + 1).padStart(2, "0") + "/" +
            d.getFullYear();
+  }
+
+  function loadGasSafeLogo() {
+    var logo = document.getElementById("gasSafeLogo");
+    if (!logo) return;
+    fetch("https://upload.wikimedia.org/wikipedia/en/thumb/4/4e/Gas_Safe_Register_logo.svg/220px-Gas_Safe_Register_logo.svg.png")
+      .then(function (r) { return r.blob(); })
+      .then(function (b) { logo.src = URL.createObjectURL(b); })
+      .catch(function () { logo.removeAttribute("src"); logo.alt = "Gas Safe Register"; });
   }
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -448,15 +491,9 @@
     renderCheckList(pipeworkChecksEl, PIPEWORK_CHECK_ITEMS, "pipework");
 
     addApplianceBtn.addEventListener("click", function () { addApplianceRow(); });
-    removeApplianceBtn.addEventListener("click", function () { removeApplianceRow(); });
-    addWorkBtn.addEventListener("click", function () {
-      addWorkRow(workBody, "work", "");
-      addWorkRow(remedialBody, "remedial", "");
-    });
-    removeWorkBtn.addEventListener("click", function () {
-      removeWorkRow(workBody);
-      removeWorkRow(remedialBody);
-    });
+    removeApplianceBtn.addEventListener("click", removeApplianceRow);
+    addWorkBtn.addEventListener("click", function () { addWorkRow(); });
+    removeWorkBtn.addEventListener("click", removeWorkRow);
     saveBtn.addEventListener("click", saveToStorage);
     downloadBtn.addEventListener("click", downloadJson);
     printBtn.addEventListener("click", function () { window.print(); });
@@ -486,7 +523,8 @@
     var resetBtn = document.getElementById("resetCols");
     if (resetBtn) resetBtn.addEventListener("click", resetColumnWidths);
 
-    enableColumnResize(".rec-appl-table");
+    enableColumnResize(".rec-appliance-table");
+    enableColumnResize(".rec-work-table");
 
     document.querySelectorAll('input[pattern="\\d{2}/\\d{2}/\\d{4}"]').forEach(function (el) {
       el.addEventListener("input", function () {
@@ -498,6 +536,8 @@
       });
     });
 
+    loadGasSafeLogo();
+
     var id = getQueryParam("id");
     if (id) {
       var rec = loadAll().filter(function (r) { return r.id === id; })[0];
@@ -505,17 +545,10 @@
     }
 
     for (var i = 0; i < DEFAULT_APPLIANCE_ROWS; i++) addApplianceRow();
-    for (var j = 0; j < DEFAULT_WORK_ROWS; j++) {
-      addWorkRow(workBody, "work", "");
-      addWorkRow(remedialBody, "remedial", "");
-    }
+    for (var j = 0; j < DEFAULT_WORK_ROWS; j++) addWorkRow();
 
     var t = todayDDMM();
     var insp = form.querySelector('[name="inspectionDate"]');
-    var iss = form.querySelector('[name="issuedDate"]');
-    var rcv = form.querySelector('[name="receivedDate"]');
     if (insp && !insp.value) insp.value = t;
-    if (iss && !iss.value) iss.value = t;
-    if (rcv && !rcv.value) rcv.value = t;
   });
 })();

@@ -31,175 +31,161 @@
   </div>
 </div>
 
-<main class="cert-page">
-  <form id="recordForm" autocomplete="off">
+<main class="cert-scroll">
+  <form id="recordForm" class="page" autocomplete="off">
 
-    <section class="rec-banner">
-      <div class="rec-logo-wrap">
-        <div class="rec-logo" id="logoBox">
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" id="logoDefault" aria-hidden="true">
-            <rect x="6" y="6" width="88" height="88" fill="none" stroke="#b8b8bd" stroke-width="2" stroke-dasharray="4 3" rx="6"/>
-            <text x="50" y="58" font-family="Inter, Arial, sans-serif" font-size="14" text-anchor="middle" fill="#9a9aa0">Logo</text>
-          </svg>
-          <img id="logoImg" alt="Logo" hidden>
+    <!-- HEADER -->
+    <div class="rec-header-top">
+      <div class="rec-header-logo-area">
+        <div class="rec-logo-box" id="logoBox" title="Click to upload your logo">
+          <img id="logoImg" src="" alt="" hidden>
+          <span class="rec-logo-hint" id="logoHint">📁<br>Logo</span>
+          <input type="file" accept="image/*" id="logoFile">
         </div>
         <div class="rec-logo-actions">
-          <label class="btn small ghost" for="logoFile">Change</label>
           <button type="button" class="btn small ghost" id="logoReset">Reset</button>
-          <input id="logoFile" type="file" accept="image/*" hidden>
         </div>
       </div>
-      <div class="rec-titles">
-        <input class="rec-title" type="text" name="title" value="Gas Installation Safety Record (Non-domestic)">
+      <div class="rec-main-title">Gas Installation Safety Record (Non-domestic)</div>
+      <div class="rec-header-right">
+        <div class="rec-gas-safe-notice">Gas Safe Register is a registered trademark of the HSE and is used under licence</div>
+        <img id="gasSafeLogo" src="" alt="Gas Safe Register" class="rec-gas-safe-logo">
       </div>
-    </section>
+    </div>
 
-    <section class="rec-meta">
-      <div class="rec-meta-cell">
-        <label>Serial No:</label>
-        <input type="text" name="serialNumber" placeholder="Serial no.">
-      </div>
-      <div class="rec-meta-cell rec-meta-grow">
-        <label>This Gas Safety Record was completed on</label>
-        <input type="text" name="inspectionDate" placeholder="DD/MM/YYYY" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}" class="rec-input-date">
-        <label>by</label>
-        <input type="text" name="engineerName" placeholder="Name">
-      </div>
-      <div class="rec-meta-cell">
-        <label>Number of appliances tested:</label>
-        <input type="text" name="numAppliancesTested" placeholder="e.g. 3" class="rec-input-num">
-      </div>
-    </section>
+    <!-- SERIAL ROW -->
+    <div class="rec-serial-row">
+      <span class="rec-serial-cell"><label>Serial No:</label> <input type="text" name="serialNumber" placeholder="Serial no."></span>
+      <span class="rec-serial-cell"><label>Number of appliances tested:</label> <input type="text" name="numAppliancesTested" placeholder="e.g. 3"></span>
+      <span class="rec-serial-cell"><label>Next Gas Safety Check due:</label> <input type="text" name="nextSafetyCheck" placeholder="DD/MM/YYYY" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}"></span>
+    </div>
 
-    <section class="rec-parties">
-      <div class="rec-block">
-        <div class="rec-block-head">
-          <span class="rec-head-title">Registered Business</span>
-          <span class="rec-head-aux">Gas Safe No: <input type="text" name="gasSafeRegNo" placeholder="No."></span>
+    <!-- COMPLETED ON LINE -->
+    <div class="rec-completed-line">
+      This Gas Safety Record was completed on
+      <input type="text" name="inspectionDate" placeholder="DD/MM/YYYY" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}" class="rec-completed-date">
+      by Gas operative:
+      <input type="text" name="engineerName" placeholder="Name, Gas Safe ID No." class="rec-completed-operative">
+    </div>
+
+    <!-- INFO GRID — 3 columns -->
+    <div class="rec-info-grid">
+      <div class="rec-info-col">
+        <div class="rec-col-header">
+          Registered Business &nbsp;
+          Gas Safe No: <input type="text" name="gasSafeRegNo" placeholder="No." class="rec-header-inline">
         </div>
-        <div class="rec-fields">
-          <input type="text" name="businessName" placeholder="Company name" class="rec-line rec-strong">
-          <div class="rec-inline-row">
-            <label>Address:</label>
-            <input type="text" name="businessAddress" class="rec-line">
-          </div>
-          <div class="rec-inline-row rec-split">
-            <div>
-              <label>Postcode:</label>
-              <input type="text" name="businessPostcode" class="rec-line">
+        <div class="rec-info-field"><input type="text" name="businessName" placeholder="Company name" class="rec-val rec-strong"></div>
+        <div class="rec-info-field"><label>Address:</label><input type="text" name="businessAddress" class="rec-val"></div>
+        <div class="rec-info-field rec-split-fields">
+          <span><label>Postcode:</label><input type="text" name="businessPostcode" class="rec-val rec-postcode"></span>
+          <span><label>Phone:</label><input type="text" name="businessPhone" class="rec-val"></span>
+        </div>
+      </div>
+
+      <div class="rec-info-col">
+        <div class="rec-col-header">Job Address</div>
+        <div class="rec-info-field"><label>Name:</label><input type="text" name="siteName" class="rec-val"></div>
+        <div class="rec-info-field"><label>Address:</label><input type="text" name="siteAddress" class="rec-val"></div>
+        <div class="rec-info-field"><label>Postcode:</label><input type="text" name="sitePostcode" class="rec-val"></div>
+      </div>
+
+      <div class="rec-info-col">
+        <div class="rec-col-header">Client Details</div>
+        <div class="rec-info-field"><label>Client:</label><input type="text" name="clientName" class="rec-val"></div>
+        <div class="rec-info-field"><label>Address:</label><input type="text" name="clientAddress" class="rec-val"></div>
+        <div class="rec-info-field"><label>Postcode:</label><input type="text" name="clientPostcode" class="rec-val"></div>
+      </div>
+    </div>
+
+    <!-- APPLIANCE TABLE — 13 cols + row# -->
+    <div class="rec-table-wrap">
+      <table class="rec-appliance-table" id="applianceTable">
+        <thead>
+          <tr>
+            <th class="rec-num-col"></th>
+            <th>Location</th>
+            <th>Appliance type</th>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Flue type</th>
+            <th>Operating pressure</th>
+            <th>Heat input</th>
+            <th>Combustion analyser reading</th>
+            <th class="rec-narrow">Safety device(s) correct operation</th>
+            <th class="rec-narrow">Ventilation provision satisfactory</th>
+            <th class="rec-narrow">Visual condition of chimney and termination sat.</th>
+            <th class="rec-narrow">Flue performance checks</th>
+            <th class="rec-narrow">Appliance safe to use</th>
+          </tr>
+        </thead>
+        <tbody id="applianceBody"></tbody>
+      </table>
+    </div>
+
+    <!-- WORK TABLE — 3 cols + row# -->
+    <div class="rec-table-wrap">
+      <table class="rec-work-table" id="workTable">
+        <thead>
+          <tr>
+            <th class="rec-num-col"></th>
+            <th>Details of work carried out</th>
+            <th>Details of remedial work required</th>
+            <th class="rec-narrow">Warning Notice</th>
+          </tr>
+        </thead>
+        <tbody id="workBody"></tbody>
+      </table>
+    </div>
+
+    <!-- BOTTOM GRID — 3 cols: Meter | Pipework | Signatures + Declaration -->
+    <div class="rec-bottom-grid">
+      <div class="rec-bottom-col">
+        <div class="rec-col-header">Meter Installation</div>
+        <div class="rec-checks" id="meterChecks"></div>
+      </div>
+
+      <div class="rec-bottom-col">
+        <div class="rec-col-header">Installation pipework</div>
+        <div class="rec-checks" id="pipeworkChecks"></div>
+      </div>
+
+      <div class="rec-bottom-col rec-sig-col">
+        <div class="rec-sig-grid">
+          <div class="rec-sig-half">
+            <div class="rec-col-header rec-sig-header">
+              <span>Issued by:</span>
+              <input type="text" name="issuedName" placeholder="Full name" class="rec-sig-name">
             </div>
-            <div>
-              <label>Phone:</label>
-              <input type="text" name="businessPhone" class="rec-line">
+            <div class="rec-sig-pad-wrap">
+              <div class="rec-sig-label">Signature:</div>
+              <div class="rec-sig-pad" data-sig="issued">
+                <canvas data-sig-canvas="issued"></canvas>
+                <div class="rec-sig-placeholder" data-sig-placeholder="issued">Sign here</div>
+              </div>
+              <button type="button" class="btn small ghost rec-sig-clear" data-clear-sig="issued">Clear</button>
+            </div>
+          </div>
+          <div class="rec-sig-half">
+            <div class="rec-col-header rec-sig-header">
+              <span>Received by:</span>
+              <input type="text" name="receivedName" placeholder="Full name" class="rec-sig-name">
+            </div>
+            <div class="rec-sig-pad-wrap">
+              <div class="rec-sig-label">Signature:</div>
+              <div class="rec-sig-pad" data-sig="received">
+                <canvas data-sig-canvas="received"></canvas>
+                <div class="rec-sig-placeholder" data-sig-placeholder="received">Sign here</div>
+              </div>
+              <button type="button" class="btn small ghost rec-sig-clear" data-clear-sig="received">Clear</button>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="rec-block">
-        <div class="rec-block-head">
-          <span class="rec-head-title">Job Address</span>
-        </div>
-        <div class="rec-fields">
-          <div class="rec-inline-row">
-            <label>Name:</label>
-            <input type="text" name="siteName" class="rec-line">
-          </div>
-          <div class="rec-inline-row">
-            <label>Address:</label>
-            <input type="text" name="siteAddress" class="rec-line">
-          </div>
-          <div class="rec-inline-row">
-            <label>Postcode:</label>
-            <input type="text" name="sitePostcode" class="rec-line">
-          </div>
+        <div class="rec-declaration">
+          <strong>DECLARATION OF GAS SAFETY</strong> – I can confirm that all of the above work described on this form has been satisfactorily completed in accordance with the current Gas Safety (Installation and Use) Regulations, industry standards and procedures.
         </div>
       </div>
-    </section>
-
-    <section class="rec-appliances">
-      <div class="rec-table-scroll">
-        <table class="rec-appl-table" id="applianceTable">
-          <thead>
-            <tr>
-              <th class="rec-num"></th>
-              <th>Location</th>
-              <th>Appliance type</th>
-              <th>Make</th>
-              <th>Model</th>
-              <th>Flue type</th>
-              <th>Operating pressure</th>
-            </tr>
-          </thead>
-          <tbody id="applianceBody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="rec-work-row">
-      <div class="rec-block">
-        <div class="rec-block-head">
-          <span class="rec-head-title">Details of work carried out</span>
-        </div>
-        <table class="rec-work-table">
-          <tbody id="workBody"></tbody>
-        </table>
-      </div>
-      <div class="rec-block">
-        <div class="rec-block-head">
-          <span class="rec-head-title">Details of remedial work required</span>
-        </div>
-        <table class="rec-work-table">
-          <tbody id="remedialBody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="rec-checks">
-      <div class="rec-block">
-        <div class="rec-block-head">
-          <span class="rec-head-title">Meter Installation</span>
-        </div>
-        <div class="rec-qa" id="meterChecks"></div>
-      </div>
-      <div class="rec-block">
-        <div class="rec-block-head">
-          <span class="rec-head-title">Installation pipework</span>
-        </div>
-        <div class="rec-qa" id="pipeworkChecks"></div>
-      </div>
-    </section>
-
-    <section class="rec-signatures">
-      <div class="rec-block">
-        <div class="rec-block-head"><span class="rec-head-title">Issued by (Engineer)</span></div>
-        <div class="rec-sig-body">
-          <div class="rec-sig-fields">
-            <div><label>Full name</label><input type="text" name="issuedName" class="rec-line"></div>
-            <div><label>Date</label><input type="text" name="issuedDate" placeholder="DD/MM/YYYY" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}" class="rec-line"></div>
-          </div>
-          <div class="rec-sig-pad" data-sig="issued">
-            <canvas data-sig-canvas="issued"></canvas>
-            <div class="rec-sig-placeholder" data-sig-placeholder="issued">Sign here</div>
-          </div>
-          <button type="button" class="btn small ghost rec-sig-clear" data-clear-sig="issued">Clear</button>
-        </div>
-      </div>
-      <div class="rec-block">
-        <div class="rec-block-head"><span class="rec-head-title">Received by (Responsible Person)</span></div>
-        <div class="rec-sig-body">
-          <div class="rec-sig-fields">
-            <div><label>Full name</label><input type="text" name="receivedName" class="rec-line"></div>
-            <div><label>Date</label><input type="text" name="receivedDate" placeholder="DD/MM/YYYY" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}" class="rec-line"></div>
-          </div>
-          <div class="rec-sig-pad" data-sig="received">
-            <canvas data-sig-canvas="received"></canvas>
-            <div class="rec-sig-placeholder" data-sig-placeholder="received">Sign here</div>
-          </div>
-          <button type="button" class="btn small ghost rec-sig-clear" data-clear-sig="received">Clear</button>
-        </div>
-      </div>
-    </section>
+    </div>
 
   </form>
 </main>
