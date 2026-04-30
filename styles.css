@@ -773,18 +773,23 @@ body.record .page select { text-align: center; text-align-last: center; }
 }
 .rec-checks { background: #fff; }
 .rec-check-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 3px 8px; border-bottom: 1px solid var(--rec-line-soft); gap: 6px; background: #fff;
+  display: flex; align-items: center;
+  padding: 3px 8px; border-bottom: 1px solid var(--rec-line-soft); gap: 8px; background: #fff;
   transition: background 0.12s;
 }
 .rec-check-row:hover { background: #fafafa; }
 .rec-check-row:last-child { border-bottom: none; }
-.rec-check-row label { flex: 1; font-size: 8px; color: var(--rec-ink); line-height: 1.35; }
+.rec-check-row label {
+  flex: 1 1 auto; min-width: 0;
+  font-size: 8px; color: var(--rec-ink); line-height: 1.35;
+}
 .rec-check-row select {
+  flex: 0 0 auto; width: 56px;
   font-size: 8.5px; border: 1px solid var(--rec-line); background: #fff;
-  padding: 2px 4px; min-width: 44px; cursor: pointer; color: var(--rec-ink);
-  font-family: inherit; border-radius: 3px; font-weight: 600;
+  padding: 2px 4px; cursor: pointer; color: var(--rec-ink);
+  font-family: inherit; font-weight: 600;
   transition: border-color 0.12s, box-shadow 0.12s;
+  text-align: center; text-align-last: center;
 }
 .rec-check-row select:focus { outline: none; border-color: #0a0a0a; box-shadow: 0 0 0 2px var(--rec-focus); }
 
