@@ -468,15 +468,6 @@
            d.getFullYear();
   }
 
-  function loadGasSafeLogo() {
-    var logo = document.getElementById("gasSafeLogo");
-    if (!logo) return;
-    fetch("https://upload.wikimedia.org/wikipedia/en/thumb/4/4e/Gas_Safe_Register_logo.svg/220px-Gas_Safe_Register_logo.svg.png")
-      .then(function (r) { return r.blob(); })
-      .then(function (b) { logo.src = URL.createObjectURL(b); })
-      .catch(function () { logo.removeAttribute("src"); logo.alt = "Gas Safe Register"; });
-  }
-
   document.addEventListener("DOMContentLoaded", function () {
     pads.issued = setupSignaturePad("issued");
     pads.received = setupSignaturePad("received");
@@ -535,8 +526,6 @@
         el.value = out;
       });
     });
-
-    loadGasSafeLogo();
 
     var id = getQueryParam("id");
     if (id) {
