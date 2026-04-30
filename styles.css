@@ -146,16 +146,17 @@ table.data tbody tr:last-child td { border-bottom: none; }
 body.landlord {
   --ll-yellow: #fbbf00;
   --ll-yellow-soft: #fff7da;
+  --ll-page: #f6e98c;
   --ll-ink: #111;
   --ll-line: #d2d2d2;
-  background: #faf8ee;
+  background: var(--ll-page);
 }
 
 body.landlord .toolbar { top: 0; border-bottom: 1px solid var(--ll-line); }
 
 .cert-page {
   max-width: 1240px; margin: 14px auto 24px;
-  padding: 14px; background: #fffef6; border: 1px solid var(--ll-line);
+  padding: 14px; background: var(--ll-page); border: 1px solid #c9bd5a;
 }
 
 .ll-banner {
@@ -221,6 +222,12 @@ body.landlord .toolbar { top: 0; border-bottom: 1px solid var(--ll-line); }
 }
 .ll-block textarea:focus, .ll-block input:focus { outline: 1px solid #000; outline-offset: -1px; }
 
+.ll-side-plain { background: var(--ll-page); border: 1px solid var(--ll-line); }
+.ll-side-plain textarea {
+  margin: 6px; background: #fff; min-height: 120px; flex: 1;
+  width: calc(100% - 12px); padding: 8px;
+}
+
 .ll-defects-table { width: 100%; border-collapse: collapse; }
 .ll-defects-table tr td { border-bottom: 1px solid var(--ll-line); padding: 0; }
 .ll-defects-table tr:last-child td { border-bottom: none; }
@@ -274,15 +281,34 @@ body.landlord .toolbar { top: 0; border-bottom: 1px solid var(--ll-line); }
 .ll-appl-table .ll-appl-del button { border: 1px solid var(--ll-line); background: #fff; cursor: pointer; font-size: 14px; padding: 0 6px; line-height: 1.2; }
 .ll-appl-table .ll-appl-del button:hover { background: #000; color: #fff; }
 
-.ll-co-row td { background: #fafafa; border-top: none; }
-.ll-co-row .ll-co-label { background: #000; color: #fff; font-weight: 700; font-size: 10px; text-align: center; padding: 4px 6px; }
-.ll-co-cell { display: grid; grid-template-columns: 1.2fr 1fr 1.3fr; gap: 0; border: 0; padding: 0; }
+.ll-co-row td { background: #fff; border-top: none; padding: 0; }
+.ll-co-row .ll-co-label { background: #000; color: #fff; font-weight: 700; font-size: 10px; text-align: left; padding: 4px 6px; vertical-align: top; }
+.ll-co-row .ll-co-empty { background: #fff; border-left: none; border-bottom: none; }
+.ll-co-cell-td { padding: 0 !important; vertical-align: top; }
+.ll-co-cell { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border: 0; padding: 0; }
 .ll-co-sub { display: flex; flex-direction: column; border-right: 1px solid var(--ll-line); }
 .ll-co-sub:last-child { border-right: none; }
-.ll-co-sub-head { background: #ededed; padding: 3px 4px; font-size: 10px; font-weight: 600; text-align: center; border-bottom: 1px solid var(--ll-line); }
-.ll-co-sub select, .ll-co-sub input { border: 0; text-align: center; padding: 4px; font-size: 11px; }
+.ll-co-sub-head { background: #000; color: #fff; padding: 3px 4px; font-size: 9px; font-weight: 600; text-align: left; border-bottom: 1px solid var(--ll-line); line-height: 1.2; min-height: 28px; }
+.ll-co-sub select, .ll-co-sub input { border: 0; text-align: center; padding: 6px 4px; font-size: 11px; min-height: 28px; }
 
-.ll-foot { text-align: left; padding: 8px 14px; font-weight: 700; font-size: 13px; border: 1px solid var(--ll-line); border-top: none; background: #fff; }
+.ll-foot {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 14px; font-weight: 700; font-size: 13px;
+  border: 1px solid var(--ll-line); border-top: none; background: var(--ll-page);
+}
+.ll-foot-pages { font-weight: 400; font-size: 12px; color: #000; }
+.ll-foot-pages strong { font-weight: 700; }
+
+.ll-page-indicator {
+  text-align: right; font-size: 12px; color: #000; padding: 6px 14px 0;
+  background: var(--ll-page);
+}
+.ll-page-indicator strong { font-weight: 700; }
+
+.ll-page2-actions {
+  display: flex; align-items: center; gap: 12px; padding: 8px 10px;
+  background: #fff; border-top: 1px solid var(--ll-line);
+}
 
 @media (max-width: 900px) {
   .ll-banner { grid-template-columns: 110px 1fr; }
@@ -300,6 +326,7 @@ body.landlord .toolbar { top: 0; border-bottom: 1px solid var(--ll-line); }
 
 @media print {
   body.landlord { background: #fff; }
+  .cert-page { background: var(--ll-page); border: none; margin: 0; padding: 0; max-width: none; }
   .ll-block textarea, .ll-block input, .ll-meta-cell input,
   .ll-defects-table input, .ll-pipe-table select,
   .ll-appl-table input, .ll-appl-table select,
@@ -307,5 +334,8 @@ body.landlord .toolbar { top: 0; border-bottom: 1px solid var(--ll-line); }
   .ll-disclaimer textarea {
     border: none !important; background: transparent !important; color: #000 !important;
   }
-  .ll-row > .ll-block, .ll-page2, .ll-foot, .ll-disclaimer, .ll-banner, .cert-page { break-inside: avoid; }
+  .ll-row > .ll-block, .ll-foot, .ll-disclaimer, .ll-banner { break-inside: avoid; }
+  .ll-page2 { break-before: page; }
+  .ll-page2-actions { display: none !important; }
+  .ll-page-indicator { padding-bottom: 6px; }
 }

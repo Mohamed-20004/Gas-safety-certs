@@ -159,7 +159,8 @@
     coRow.appendChild(coLabel);
 
     var coCellTd = document.createElement("td");
-    coCellTd.colSpan = APPLIANCE_FIELDS.length + 1;
+    coCellTd.className = "ll-co-cell-td";
+    coCellTd.colSpan = 3;
     var grid = document.createElement("div");
     grid.className = "ll-co-cell";
 
@@ -182,6 +183,11 @@
     grid.appendChild(coBlock("CO alarm test satisfactory?", "testOk", YN));
     coCellTd.appendChild(grid);
     coRow.appendChild(coCellTd);
+
+    var coEmpty = document.createElement("td");
+    coEmpty.className = "ll-co-empty";
+    coEmpty.colSpan = APPLIANCE_FIELDS.length + 1 - 3;
+    coRow.appendChild(coEmpty);
 
     applianceBody.appendChild(main);
     applianceBody.appendChild(coRow);
@@ -355,8 +361,9 @@
     writePipework(rec.pipework);
 
     applianceBody.innerHTML = "";
-    (rec.appliances || []).forEach(addApplianceRow);
-    if (!(rec.appliances || []).length) addApplianceRow();
+    var appls = rec.appliances || [];
+    appls.forEach(addApplianceRow);
+    for (var pad = appls.length; pad < 5; pad++) addApplianceRow();
 
     setLogoDataUrl(state.logoDataUrl);
 
@@ -422,6 +429,6 @@
       if (rec) { populate(rec); return; }
     }
     document.getElementById("dateField").value = today;
-    addApplianceRow();
+    for (var i = 0; i < 5; i++) addApplianceRow();
   });
 })();
