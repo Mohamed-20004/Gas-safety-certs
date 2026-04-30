@@ -210,27 +210,47 @@ body.landlord .toolbar .btn.primary:hover { background: #fff; color: #000; }
 .cert-page section[id] { scroll-margin-top: 110px; }
 html { scroll-behavior: smooth; }
 
-/* Black banner with logo + yellow meta strip + black title strip */
+/* Black banner: logo column + (yellow meta strip on top, black title strip below) */
 .ll-banner {
   background: #000; color: #fff;
-  display: grid; grid-template-columns: 220px 1fr;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "logo meta"
+    "logo titles";
 }
-.ll-logo-wrap { background: #000; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.ll-logo { width: 130px; height: 130px; display: flex; align-items: center; justify-content: center; background: #000; }
+.ll-logo-wrap {
+  grid-area: logo;
+  background: #000;
+  padding: 8px 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative;
+}
+.ll-logo { width: 110px; height: 110px; display: flex; align-items: center; justify-content: center; background: #000; }
 .ll-logo svg, .ll-logo img { width: 100%; height: 100%; object-fit: contain; }
-.ll-logo-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
-.ll-on-dark { border-color: #3a3a3a !important; color: #fff !important; background: transparent !important; border-radius: 4px !important; }
+.ll-logo-actions {
+  position: absolute; left: 6px; right: 6px; bottom: 6px;
+  display: flex; gap: 4px; justify-content: center;
+  opacity: 0; transition: opacity 0.15s;
+}
+.ll-logo-wrap:hover .ll-logo-actions,
+.ll-logo-wrap:focus-within .ll-logo-actions { opacity: 1; }
+.ll-on-dark { border-color: #fff !important; color: #fff !important; background: rgba(0,0,0,0.6) !important; border-radius: 3px !important; padding: 2px 6px !important; font-size: 10px !important; min-height: 18px !important; }
 .ll-on-dark:hover { background: var(--ll-yellow) !important; color: #000 !important; border-color: var(--ll-yellow) !important; }
 
-.ll-banner-right { display: flex; flex-direction: column; }
+.ll-banner-right { display: contents; }
 
 .ll-meta {
-  display: grid; grid-template-columns: 1fr 1.4fr 1.4fr 1.2fr;
-  background: var(--ll-yellow); color: #000;
+  grid-area: meta;
+  display: grid; grid-template-columns: 1fr 1.5fr 1.7fr 1.1fr;
+  background: var(--ll-yellow) !important; color: #000;
+  min-height: 32px;
 }
 .ll-meta-cell {
   padding: 4px 10px; display: flex; align-items: center; gap: 8px;
   border-right: 1px solid #000;
+  background: var(--ll-yellow);
 }
 .ll-meta-cell:last-child { border-right: none; }
 .ll-meta-cell label {
@@ -241,19 +261,24 @@ html { scroll-behavior: smooth; }
 .ll-meta-cell input {
   flex: 1; min-width: 0;
   border: 1px solid #000; background: #fff;
-  padding: 3px 6px; font-size: 12px; font-family: inherit; color: #000;
-  border-radius: 0; min-height: 22px;
+  padding: 2px 6px; font-size: 12px; font-family: inherit; color: #000;
+  border-radius: 0; min-height: 20px;
   text-align: center; text-align-last: center;
 }
 .ll-meta-cell input[type="date"] {
-  padding: 2px 4px; font-size: 11px; text-align: center;
+  padding: 2px 4px; font-size: 11px;
 }
 .ll-meta-cell input:focus { outline: 2px solid #000; outline-offset: -2px; }
 
-.ll-titles { padding: 14px 22px 18px; display: flex; flex-direction: column; gap: 4px; background: #000; }
+.ll-titles {
+  grid-area: titles;
+  padding: 10px 20px 14px;
+  display: flex; flex-direction: column; gap: 2px;
+  background: #000;
+}
 .ll-title-1, .ll-title-2 { background: transparent; border: 0; color: #fff; font-family: inherit; width: 100%; padding: 1px 0; }
-.ll-title-1 { font-size: 26px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.1; }
-.ll-title-2 { font-size: 14px; font-weight: 700; letter-spacing: 0.4px; line-height: 1.2; }
+.ll-title-1 { font-size: 26px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.05; }
+.ll-title-2 { font-size: 13px; font-weight: 700; letter-spacing: 0.4px; line-height: 1.15; }
 .ll-title-1:focus, .ll-title-2:focus { outline: 1px dashed var(--ll-yellow); outline-offset: 2px; }
 
 /* Section grids — every block sits on the yellow page bg with the gap visible */
@@ -416,12 +441,12 @@ html { scroll-behavior: smooth; }
 .ll-page2-actions .btn { border-radius: 6px; }
 
 @media (max-width: 900px) {
-  .ll-banner { grid-template-columns: 110px 1fr; }
+  .ll-banner { grid-template-columns: 130px 1fr; }
   .ll-logo { width: 90px; height: 90px; }
   .ll-meta { grid-template-columns: 1fr 1fr; }
   .ll-meta-cell:nth-child(2n) { border-right: none; }
   .ll-meta-cell { border-bottom: 1px solid #000; }
-  .ll-three, .ll-work, .ll-defects-pipe, .ll-bottom { grid-template-columns: 1fr; }
+  .ll-three, .ll-defects-pipe, .ll-bottom { grid-template-columns: 1fr; }
   .ll-pipe-table { table-layout: auto; }
   .ll-pipe-table th { font-size: 10px; }
   .ll-title-1 { font-size: 20px; }
