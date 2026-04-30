@@ -585,8 +585,12 @@ body.record .page input,
 body.record .page textarea,
 body.record .page select {
   font-family: inherit; color: inherit;
-  -webkit-appearance: none; -moz-appearance: none; appearance: none;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
   background-image: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 body.record .page select { text-align: center; text-align-last: center; }
 
@@ -631,7 +635,7 @@ body.record .page select { text-align: center; text-align-last: center; }
   border: 0; border-bottom: 1px solid #b8b8bd; background: transparent;
   font-size: 8.5px; padding: 1px 4px; min-width: 70px; max-width: 160px;
   font-family: inherit; color: var(--rec-ink); font-weight: 500;
-  border-radius: 2px; transition: border-color 0.12s, background 0.12s;
+  transition: border-color 0.12s, background 0.12s;
 }
 .rec-serial-cell input:focus { outline: none; border-bottom-color: #0a0a0a; border-bottom-width: 2px; background: #fffbe6; }
 
@@ -646,7 +650,6 @@ body.record .page select { text-align: center; text-align-last: center; }
   border: 0; border-bottom: 1px solid #b8b8bd; background: transparent;
   font-size: 9px; padding: 2px 6px; font-family: inherit; color: #0a0a0a;
   font-weight: 500; transition: border-color 0.12s, box-shadow 0.12s, background 0.12s;
-  border-radius: 2px;
 }
 .rec-completed-line input:focus {
   outline: none; border-bottom-color: #0a0a0a; border-bottom-width: 2px;
@@ -674,7 +677,7 @@ body.record .page select { text-align: center; text-align-last: center; }
   border: 0; border-bottom: 1px solid #b8b8bd; background: transparent;
   font-size: 8.5px; padding: 0 4px; min-width: 56px; flex: 0 0 auto;
   font-family: inherit; font-weight: 500; color: var(--rec-ink);
-  border-radius: 2px; transition: border-color 0.12s, background 0.12s;
+  transition: border-color 0.12s, background 0.12s;
 }
 .rec-header-inline:focus { outline: none; border-bottom-color: #0a0a0a; border-bottom-width: 2px; background: #fffbe6; }
 .rec-info-field { display: flex; align-items: baseline; gap: 4px; margin-bottom: 2px; }
@@ -683,7 +686,7 @@ body.record .page select { text-align: center; text-align-last: center; }
   border: 0; border-bottom: 1px solid #b8b8bd; background: transparent;
   flex: 1; min-height: 12px; font-size: 8.5px; padding: 1px 4px;
   font-family: inherit; min-width: 0; color: var(--rec-ink);
-  border-radius: 2px; transition: border-color 0.12s, background 0.12s;
+  transition: border-color 0.12s, background 0.12s;
   font-weight: 500;
 }
 .rec-val:focus { outline: none; border-bottom-color: #0a0a0a; border-bottom-width: 2px; background: #fffbe6; }
@@ -796,7 +799,7 @@ body.record .page select { text-align: center; text-align-last: center; }
   border: 0; border-bottom: 1px solid #b8b8bd; background: transparent;
   font-size: 8.5px; padding: 1px 4px; flex: 1;
   font-family: inherit; font-weight: 500; min-width: 0; color: var(--rec-ink);
-  border-radius: 2px; transition: border-color 0.12s, background 0.12s;
+  transition: border-color 0.12s, background 0.12s;
 }
 .rec-sig-name:focus { outline: none; border-bottom-color: #0a0a0a; border-bottom-width: 2px; background: #fffbe6; }
 .rec-sig-pad-wrap { padding: 6px 8px; display: flex; flex-direction: column; }
