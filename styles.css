@@ -312,7 +312,22 @@ html { scroll-behavior: smooth; }
   background: #fff; border: 1px solid rgba(0,0,0,0.08);
   display: flex; flex-direction: column; min-width: 0;
   border-radius: 4px; overflow: hidden;
+  position: relative;
 }
+
+/* Small floating postcode box at the bottom-right of each parties block */
+.ll-three .ll-block textarea { padding-bottom: 36px; }
+.ll-postcode {
+  position: absolute; right: 6px; bottom: 6px;
+}
+.ll-postcode input {
+  width: 110px; padding: 4px 8px; font-size: 11px; font-weight: 600;
+  border: 1px solid #1a1a1a; background: #fff; color: #0a0a0a;
+  border-radius: 3px; text-transform: uppercase; letter-spacing: 0.5px;
+  text-align: center; font-family: inherit;
+  transition: box-shadow 0.12s, border-color 0.12s;
+}
+.ll-postcode input:focus { outline: none; border-color: #0a0a0a; box-shadow: 0 0 0 2px rgba(245,197,24,0.55); }
 
 /* Gray section header strip */
 .ll-block-head {
@@ -341,7 +356,7 @@ html { scroll-behavior: smooth; }
 /* The work section: header spans full width, body is a flex row with main + small box */
 .ll-work-block { grid-column: 1 / -1; }
 .ll-work-body { display: grid; grid-template-columns: 5fr 1fr; gap: 0; flex: 1; }
-.ll-work-body textarea { min-height: 96px; border-right: 1px solid var(--ll-line); }
+.ll-work-body textarea { min-height: 96px; border-right: 3px solid #0a0a0a; }
 .ll-work-side { display: flex; flex-direction: column; }
 .ll-work-side textarea { min-height: 96px; border-right: 0; }
 
