@@ -557,7 +557,7 @@ body.record .toolbar .btn.ghost:hover { background: #f4f4f5; border-color: #d0d0
 .rec-density .btn[aria-pressed="true"] { background: #0a0a0a; color: #fff; border-color: #0a0a0a; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
 
 body.record .cert-page {
-  max-width: 1200px; margin: 18px auto 32px; padding: 28px;
+  max-width: 1200px; margin: 16px auto 28px; padding: 22px 24px;
   background: var(--rec-card); border: 1px solid rgba(0,0,0,0.06);
   border-radius: 12px;
   box-shadow:
@@ -578,32 +578,32 @@ body.record .cert-page input[type="date"] {
 /* Banner: logo + title */
 .rec-banner {
   display: grid; grid-template-columns: auto 1fr;
-  align-items: center; gap: 24px;
-  padding-bottom: 18px; border-bottom: 1px solid var(--rec-line);
-  margin-bottom: 18px;
+  align-items: center; gap: 20px;
+  padding-bottom: 12px; border-bottom: 1px solid var(--rec-line);
+  margin-bottom: 12px;
 }
-.rec-logo-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; }
+.rec-logo-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; }
 .rec-logo {
-  width: 110px; height: 110px;
+  width: 92px; height: 92px;
   display: flex; align-items: center; justify-content: center;
   background: #fff; border-radius: 8px;
 }
 .rec-logo svg, .rec-logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
 .rec-logo-actions { display: flex; gap: 4px; }
-.rec-logo-actions .btn { padding: 2px 8px !important; font-size: 10px !important; min-height: 18px !important; border-radius: 4px !important; }
+.rec-logo-actions .btn { padding: 1px 7px !important; font-size: 10px !important; min-height: 16px !important; border-radius: 4px !important; }
 .rec-titles { display: flex; flex-direction: column; }
 .rec-title {
   border: 0; background: transparent; font-family: inherit;
-  font-size: 28px; font-weight: 800; letter-spacing: -0.5px;
-  color: var(--rec-ink); padding: 0; width: 100%;
+  font-size: 26px; font-weight: 800; letter-spacing: -0.5px;
+  color: var(--rec-ink); padding: 0; width: 100%; line-height: 1.1;
 }
 .rec-title:focus { outline: 1px dashed var(--rec-mute); outline-offset: 4px; }
 
 /* Inline meta strip */
 .rec-meta {
-  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
-  padding: 4px 0 14px; border-bottom: 1px solid var(--rec-line);
-  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding: 2px 0 10px; border-bottom: 1px solid var(--rec-line);
+  margin-bottom: 10px;
   font-size: 13px;
 }
 .rec-meta-cell { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -643,7 +643,7 @@ body.record .cert-page input[type="date"] {
 /* Parties row */
 .rec-parties {
   display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 .rec-fields { padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
 .rec-line {
@@ -659,7 +659,7 @@ body.record .cert-page input[type="date"] {
 .rec-inline-row.rec-split > div { flex: 1; display: flex; align-items: baseline; gap: 8px; }
 
 /* Appliance table */
-.rec-appliances { margin-bottom: 14px; border: 1px solid var(--rec-line); border-radius: 6px; overflow: hidden; }
+.rec-appliances { margin-bottom: 10px; border: 1px solid var(--rec-line); border-radius: 6px; overflow: hidden; }
 .rec-table-scroll { overflow-x: auto; }
 .rec-appl-table {
   width: 100%; border-collapse: collapse; table-layout: fixed;
@@ -697,7 +697,7 @@ body.record .cert-page input[type="date"] {
 /* Work / Remedial side-by-side tables */
 .rec-work-row {
   display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 .rec-work-table { width: 100%; border-collapse: collapse; }
 .rec-work-table tr td { border-bottom: 1px solid var(--rec-line); padding: 0; }
@@ -719,19 +719,20 @@ body.record .cert-page input[type="date"] {
 /* Meter / Pipework Q&A */
 .rec-checks {
   display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
-.rec-qa { padding: 4px 0; }
+.rec-qa { padding: 2px 0; }
 .rec-qa-row {
   display: grid; grid-template-columns: 1fr auto;
   align-items: center; gap: 10px;
-  padding: 8px 14px; border-bottom: 1px solid var(--rec-line-soft);
+  padding: 5px 14px; border-bottom: 1px solid var(--rec-line-soft);
+  min-height: 30px;
 }
 .rec-qa-row:last-child { border-bottom: none; }
-.rec-qa-label { font-size: 13px; color: var(--rec-ink); }
+.rec-qa-label { font-size: 12.5px; color: var(--rec-ink); line-height: 1.35; }
 .rec-qa-row select {
   border: 1px solid var(--rec-line); background: #fff; color: var(--rec-ink);
-  font-family: inherit; font-size: 13px; padding: 4px 10px; min-width: 80px;
+  font-family: inherit; font-size: 12.5px; padding: 3px 8px; min-width: 64px; width: 64px;
   border-radius: 4px; text-align: center; text-align-last: center;
   cursor: pointer; transition: border-color 0.12s, box-shadow 0.12s;
 }
@@ -741,14 +742,14 @@ body.record .cert-page input[type="date"] {
 .rec-signatures {
   display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
 }
-.rec-sig-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
-.rec-sig-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: end; }
-.rec-sig-fields > div { display: flex; flex-direction: column; gap: 4px; }
-.rec-sig-fields label { font-size: 11px; font-weight: 600; color: var(--rec-mute); text-transform: uppercase; letter-spacing: 0.5px; }
+.rec-sig-body { padding: 10px 14px 10px; display: flex; flex-direction: column; gap: 8px; }
+.rec-sig-fields { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; align-items: end; }
+.rec-sig-fields > div { display: flex; flex-direction: column; gap: 3px; }
+.rec-sig-fields label { font-size: 10px; font-weight: 600; color: var(--rec-mute); text-transform: uppercase; letter-spacing: 0.5px; }
 .rec-sig-pad {
   border: 1px solid var(--rec-line); background: #fff;
-  height: 70px; position: relative; touch-action: none;
-  resize: vertical; overflow: hidden; min-height: 50px;
+  height: 54px; position: relative; touch-action: none;
+  resize: vertical; overflow: hidden; min-height: 40px;
   border-radius: 4px;
 }
 .rec-sig-pad canvas { display: block; width: 100%; height: 100%; cursor: crosshair; touch-action: none; }
@@ -756,7 +757,7 @@ body.record .cert-page input[type="date"] {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   font-size: 11px; color: #b0b0b6; pointer-events: none; font-style: italic;
 }
-.rec-sig-clear { align-self: flex-start; padding: 2px 8px !important; font-size: 10px !important; min-height: 20px !important; opacity: 0.6; border-radius: 4px !important; }
+.rec-sig-clear { align-self: flex-start; padding: 1px 8px !important; font-size: 10px !important; min-height: 18px !important; opacity: 0.55; border-radius: 4px !important; }
 .rec-sig-clear:hover { opacity: 1; }
 
 @media (max-width: 900px) {
