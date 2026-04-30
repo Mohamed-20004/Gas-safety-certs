@@ -404,6 +404,72 @@
     setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 0);
   }
 
+  var DENSITY_KEY = "gsr.landlord.density";
+  var COL_KEY = "gsr.landlord.colWidths";
+
+  function setDensity(name) {
+    var allowed = { compact: 1, cozy: 1, comfortable: 1 };
+    if (!allowed[name]) name = "cozy";
+    document.body.setAttribute("data-density", name);
+    document.querySelectorAll(".ll-density [data-density]").forEach(function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-density") === name ? "true" : "false");
+    });
+    try { localStorage.setItem(DENSITY_KEY, name); } catch (e) {}
+  }
+
+  function loadColWidths() {
+    try { return JSON.parse(localStorage.getItem(COL_KEY) || "{}") || {}; }
+    catch (e) { return {}; }
+  }
+  function saveColWidths(map) {
+    try { localStorage.setItem(COL_KEY, JSON.stringify(map)); } catch (e) {}
+  }
+
+  function enableColumnResize(tableSelector) {
+    var table = document.querySelector(tableSelector);
+    if (!table) return;
+    var widths = loadColWidths();
+    var key = tableSelector;
+    var savedRow = widths[key] || [];
+    var ths = Array.prototype.slice.call(table.querySelectorAll("thead th"));
+
+    ths.forEach(function (th, i) {
+      if (savedRow[i]) th.style.width = savedRow[i] + "px";
+      if (i === ths.length - 1) return;
+      var handle = document.createElement("span");
+      handle.className = "ll-resize-handle";
+      th.appendChild(handle);
+      handle.addEventListener("mousedown", function (e) {
+        e.preventDefault(); e.stopPropagation();
+        handle.classList.add("active");
+        var startX = e.clientX;
+        var startW = th.getBoundingClientRect().width;
+        function onMove(ev) {
+          var w = Math.max(40, startW + (ev.clientX - startX));
+          th.style.width = w + "px";
+        }
+        function onUp() {
+          handle.classList.remove("active");
+          document.removeEventListener("mousemove", onMove);
+          document.removeEventListener("mouseup", onUp);
+          var current = loadColWidths();
+          current[key] = ths.map(function (t) {
+            return Math.round(t.getBoundingClientRect().width);
+          });
+          saveColWidths(current);
+        }
+        document.addEventListener("mousemove", onMove);
+        document.addEventListener("mouseup", onUp);
+      });
+    });
+  }
+
+  function resetColumnWidths() {
+    try { localStorage.removeItem(COL_KEY); } catch (e) {}
+    document.querySelectorAll(".ll-appl-table thead th, .ll-pipe-table thead th")
+      .forEach(function (th) { th.style.width = ""; });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     buildDefects();
     pads.issued = setupSignaturePad("issued");
@@ -422,6 +488,18 @@
       if (!confirm("Start a new blank record? Unsaved changes will be lost.")) return;
       location.href = "landlord.html";
     });
+
+    var stored;
+    try { stored = localStorage.getItem(DENSITY_KEY); } catch (e) { stored = null; }
+    setDensity(stored || "cozy");
+    document.querySelectorAll(".ll-density [data-density]").forEach(function (b) {
+      b.addEventListener("click", function () { setDensity(b.getAttribute("data-density")); });
+    });
+    var resetBtn = document.getElementById("resetCols");
+    if (resetBtn) resetBtn.addEventListener("click", resetColumnWidths);
+
+    enableColumnResize(".ll-appl-table");
+    enableColumnResize(".ll-pipe-table");
     var today = new Date().toISOString().slice(0, 10);
     var id = getQueryParam("id");
     if (id) {
