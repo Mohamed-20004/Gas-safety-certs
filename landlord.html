@@ -97,74 +97,72 @@
           <tbody></tbody>
         </table>
       </div>
-      <div class="ll-right-stack">
-        <div class="ll-block ll-pipe">
-          <div class="ll-block-head">GAS INSTALLATION PIPEWORK</div>
-          <table class="ll-pipe-table">
-            <thead>
-              <tr>
-                <th>Pipework visual inspection</th>
-                <th>Outcome of gas supply pipework visual inspection</th>
-                <th>Is the Emergency Control Valve access satisfactory?</th>
-                <th>Outcome of gas tightness test?</th>
-                <th>Is protective equipotential bonding satisfactory?</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><select name="pipe.visual"><option></option><option>Pass</option><option>Fail</option><option>N/A</option></select></td>
-                <td><select name="pipe.supplyVisual"><option></option><option>Pass</option><option>Fail</option><option>N/A</option></select></td>
-                <td><select name="pipe.ecvAccess"><option></option><option>Yes</option><option>No</option><option>N/A</option></select></td>
-                <td><select name="pipe.tightness"><option></option><option>Pass</option><option>Fail</option><option>N/A</option></select></td>
-                <td><select name="pipe.bonding"><option></option><option>Yes</option><option>No</option><option>N/A</option></select></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="ll-sigwrap" id="sec-signoff">
-          <div class="ll-sig">
-            <div class="ll-sig-head">Record issued by:</div>
-            <div class="ll-sig-fields">
-              <div class="ll-sig-field">
-                <label>Signature</label>
-                <div class="ll-sig-pad" data-sig="issued">
-                  <canvas data-sig-canvas="issued"></canvas>
-                  <div class="ll-sig-placeholder" data-sig-placeholder="issued">Sign here</div>
-                </div>
-                <button type="button" class="btn small ghost" data-clear-sig="issued">Clear</button>
-              </div>
-              <div class="ll-sig-field">
-                <label>Name (Capitals)</label>
-                <input type="text" name="issuedName" value="HUSSAIN HASHIMI" class="ll-uppercase">
-              </div>
-            </div>
-          </div>
-          <div class="ll-sig">
-            <div class="ll-sig-head">Record received by: <span class="ll-sub">(tenant/landlord/homeowner/agent)</span></div>
-            <div class="ll-sig-fields">
-              <div class="ll-sig-field">
-                <label>Signature</label>
-                <div class="ll-sig-pad" data-sig="received">
-                  <canvas data-sig-canvas="received"></canvas>
-                  <div class="ll-sig-placeholder" data-sig-placeholder="received">Sign here</div>
-                </div>
-                <button type="button" class="btn small ghost" data-clear-sig="received">Clear</button>
-              </div>
-              <div class="ll-sig-field">
-                <label>Name (Capitals)</label>
-                <input type="text" name="receivedName" class="ll-uppercase">
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="ll-block ll-pipe">
+        <div class="ll-block-head">GAS INSTALLATION PIPEWORK</div>
+        <table class="ll-pipe-table">
+          <thead>
+            <tr>
+              <th>Pipework visual inspection</th>
+              <th>Outcome of gas supply pipework visual inspection</th>
+              <th>Is the Emergency Control Valve access satisfactory?</th>
+              <th>Outcome of gas tightness test?</th>
+              <th>Is protective equipotential bonding satisfactory?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><select name="pipe.visual"><option value=""></option><option value="Pass">&#10003;</option><option value="Fail">&#10007;</option><option value="N/A">N/A</option></select></td>
+              <td><select name="pipe.supplyVisual"><option value=""></option><option value="Pass">&#10003;</option><option value="Fail">&#10007;</option><option value="N/A">N/A</option></select></td>
+              <td><select name="pipe.ecvAccess"><option value=""></option><option value="Yes">&#10003;</option><option value="No">&#10007;</option><option value="N/A">N/A</option></select></td>
+              <td><select name="pipe.tightness"><option value=""></option><option value="Pass">&#10003;</option><option value="Fail">&#10007;</option><option value="N/A">N/A</option></select></td>
+              <td><select name="pipe.bonding"><option value=""></option><option value="Yes">&#10003;</option><option value="No">&#10007;</option><option value="N/A">N/A</option></select></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
-    <section class="ll-row ll-bottom">
+    <section class="ll-row ll-bottom" id="sec-signoff">
       <div class="ll-block ll-remedial">
         <div class="ll-block-head">ANY REMEDIAL ACTION TAKEN OR NOTES <span class="ll-sub">Numbers should correspond to defects above</span></div>
-        <textarea name="remedialActions" rows="3"></textarea>
+        <textarea name="remedialActions" rows="6"></textarea>
+      </div>
+
+      <div class="ll-sigwrap">
+        <div class="ll-sig">
+          <div class="ll-sig-head">Record issued by:</div>
+          <div class="ll-sig-fields">
+            <div class="ll-sig-field">
+              <label>Signature</label>
+              <div class="ll-sig-pad" data-sig="issued">
+                <canvas data-sig-canvas="issued"></canvas>
+                <div class="ll-sig-placeholder" data-sig-placeholder="issued">Sign here</div>
+              </div>
+              <button type="button" class="btn small ghost" data-clear-sig="issued">Clear</button>
+            </div>
+            <div class="ll-sig-field">
+              <label>Name (Capitals)</label>
+              <input type="text" name="issuedName" value="HUSSAIN HASHIMI" class="ll-uppercase">
+            </div>
+          </div>
+        </div>
+        <div class="ll-sig">
+          <div class="ll-sig-head">Record received by: <span class="ll-sub">(tenant/landlord/homeowner/agent)</span></div>
+          <div class="ll-sig-fields">
+            <div class="ll-sig-field">
+              <label>Signature</label>
+              <div class="ll-sig-pad" data-sig="received">
+                <canvas data-sig-canvas="received"></canvas>
+                <div class="ll-sig-placeholder" data-sig-placeholder="received">Sign here</div>
+              </div>
+              <button type="button" class="btn small ghost" data-clear-sig="received">Clear</button>
+            </div>
+            <div class="ll-sig-field">
+              <label>Name (Capitals)</label>
+              <input type="text" name="receivedName" class="ll-uppercase">
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="ll-attention">
