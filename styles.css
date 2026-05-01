@@ -730,6 +730,7 @@ body.record .page select { text-align: center; text-align-last: center; }
   background: var(--rec-soft);
 }
 .rec-narrow { width: 34px; }
+.rec-work-table .rec-narrow { width: 96px; }
 .rec-appliance-table td { height: 14px; padding: 0; }
 .rec-work-table td { height: 14px; padding: 0; }
 .rec-appliance-table textarea,
