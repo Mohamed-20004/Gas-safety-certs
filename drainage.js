@@ -18,8 +18,16 @@
 
   var state = {
     id: null, createdAt: null,
-    signatures: { signature: "" },
+    signatures: { testedBy: "", witness: "" },
     logoDataUrl: ""
+  };
+
+  // BS EN 1610 air-test methods — initial pressure / max allowable drop in mbar
+  var METHOD_TOLERANCE = {
+    LA: { initial: 10,  drop: 2.5 },
+    LB: { initial: 50,  drop: 10 },
+    LC: { initial: 100, drop: 15 },
+    LD: { initial: 200, drop: 25 }
   };
   var pads = {};
 
@@ -149,7 +157,10 @@
       data[cb.name] = cb.checked;
     });
     data.result = readResult();
-    data.signatures = { signature: state.signatures.signature || "" };
+    data.signatures = {
+      testedBy: state.signatures.testedBy || "",
+      witness:  state.signatures.witness  || ""
+    };
     data.logoDataUrl = state.logoDataUrl || "";
     data.updatedAt = new Date().toISOString();
     if (!data.createdAt) data.createdAt = state.createdAt || data.updatedAt;
@@ -160,7 +171,10 @@
     if (!rec) return;
     state.id = rec.id || null;
     state.createdAt = rec.createdAt || null;
-    state.signatures = { signature: (rec.signatures && rec.signatures.signature) || "" };
+    state.signatures = {
+      testedBy: (rec.signatures && rec.signatures.testedBy) || "",
+      witness:  (rec.signatures && rec.signatures.witness)  || ""
+    };
     state.logoDataUrl = rec.logoDataUrl || "";
 
     Array.from(form.elements).forEach(function (el) {
@@ -176,7 +190,11 @@
     });
 
     setLogoDataUrl(state.logoDataUrl);
-    if (pads.signature) pads.signature.load(state.signatures.signature);
+    if (pads.testedBy) pads.testedBy.load(state.signatures.testedBy);
+    if (pads.witness)  pads.witness.load(state.signatures.witness);
+    autoFillAllowableDrop();
+    evaluatePassGating();
+    updateReasonVisibility();
     applyResultStyling();
   }
 
@@ -230,8 +248,61 @@
            d.getFullYear();
   }
 
+  // ---- Test-method aware helpers ----
+
+  function autoFillAllowableDrop() {
+    var methodEl = form.querySelector('[name="testMethod"]');
+    var allowable = form.querySelector('[name="allowableDrop"]');
+    if (!methodEl || !allowable) return;
+    var t = METHOD_TOLERANCE[methodEl.value];
+    if (!t) return;
+    // Don't overwrite a manual value the user has already typed.
+    if (allowable.dataset.manual === "true") return;
+    allowable.value = t.drop + " mbar";
+  }
+
+  function parseMbar(value) {
+    if (!value) return NaN;
+    var m = String(value).replace(",", ".").match(/-?\d+(\.\d+)?/);
+    return m ? parseFloat(m[0]) : NaN;
+  }
+
+  function evaluatePassGating() {
+    var passInput = form.querySelector('input[name="result"][value="PASS"]');
+    var failInput = form.querySelector('input[name="result"][value="FAIL"]');
+    var passCell = passInput && passInput.closest(".dr-result-cell");
+    if (!passCell) return;
+
+    var start    = parseMbar(form.querySelector('[name="testPressureStart"]').value);
+    var finish   = parseMbar(form.querySelector('[name="testPressureFinish"]').value);
+    var allowed  = parseMbar(form.querySelector('[name="allowableDrop"]').value);
+
+    // Need three numeric values to make any judgment
+    if (isNaN(start) || isNaN(finish) || isNaN(allowed)) {
+      passCell.classList.remove("locked");
+      passInput.disabled = false;
+      return;
+    }
+    var drop = start - finish;
+    var fail = drop > allowed;
+    passCell.classList.toggle("locked", fail);
+    passInput.disabled = fail;
+    if (fail && passInput.checked) {
+      passInput.checked = false;
+      failInput.checked = true;
+    }
+  }
+
+  function updateReasonVisibility() {
+    var reason = document.getElementById("reasonForFail");
+    if (!reason) return;
+    var failChecked = !!form.querySelector('input[name="result"][value="FAIL"]:checked');
+    reason.hidden = !failChecked;
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
-    pads.signature = setupSignaturePad("signature");
+    pads.testedBy = setupSignaturePad("testedBy");
+    pads.witness  = setupSignaturePad("witness");
     document.querySelectorAll("[data-clear-sig]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var n = btn.getAttribute("data-clear-sig");
@@ -283,7 +354,35 @@
     });
 
     form.querySelectorAll('input[name="result"]').forEach(function (r) {
-      r.addEventListener("change", applyResultStyling);
+      r.addEventListener("change", function () {
+        applyResultStyling();
+        updateReasonVisibility();
+      });
+    });
+
+    // Test method drives the auto-filled allowable drop.
+    var methodEl = form.querySelector('[name="testMethod"]');
+    if (methodEl) methodEl.addEventListener("change", function () {
+      var allowable = form.querySelector('[name="allowableDrop"]');
+      if (allowable) allowable.dataset.manual = "false";
+      autoFillAllowableDrop();
+      evaluatePassGating();
+    });
+
+    // If the user types in the allowable-drop field by hand, mark it
+    // manual so a later method change won't overwrite their value.
+    var allowableEl = form.querySelector('[name="allowableDrop"]');
+    if (allowableEl) {
+      allowableEl.addEventListener("input", function () {
+        allowableEl.dataset.manual = "true";
+        evaluatePassGating();
+      });
+    }
+
+    // Pressure start / finish drive the gating too.
+    ["testPressureStart", "testPressureFinish"].forEach(function (n) {
+      var el = form.querySelector('[name="' + n + '"]');
+      if (el) el.addEventListener("input", evaluatePassGating);
     });
 
     var id = getQueryParam("id");
@@ -294,9 +393,14 @@
 
     var t = todayDDMM();
     var ds = form.querySelector('[name="dateStart"]');
-    var sd = form.querySelector('[name="signatureDate"]');
+    var tbd = form.querySelector('[name="testedByDate"]');
+    var wd = form.querySelector('[name="witnessDate"]');
     if (ds && !ds.value) ds.value = t;
-    if (sd && !sd.value) sd.value = t;
+    if (tbd && !tbd.value) tbd.value = t;
+    if (wd && !wd.value) wd.value = t;
+    autoFillAllowableDrop();
+    evaluatePassGating();
+    updateReasonVisibility();
     applyResultStyling();
   });
 })();
