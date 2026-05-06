@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drainage Pressure Test Certificate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="drainage">
+
+<div class="toolbar">
+  <a class="btn ghost" href="index.html">&larr; Dashboard</a>
+  <button class="btn primary" id="saveBtn">Save</button>
+  <button class="btn" id="downloadBtn">Download JSON</button>
+  <button class="btn ghost" id="printBtn">Print</button>
+  <button class="btn ghost" id="newBtn">New</button>
+  <div class="dr-density" role="group" aria-label="Density">
+    <span class="dr-density-label">Size</span>
+    <button type="button" class="btn small ghost" data-density="compact" title="Compact">S</button>
+    <button type="button" class="btn small ghost" data-density="cozy" title="Cozy">M</button>
+    <button type="button" class="btn small ghost" data-density="comfortable" title="Comfortable">L</button>
+  </div>
+</div>
+
+<main class="cert-page">
+  <form id="recordForm" autocomplete="off">
+
+    <section class="dr-banner">
+      <div class="dr-logo-wrap">
+        <div class="dr-logo" id="logoBox" title="Click to upload your logo">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" id="logoDefault" aria-hidden="true">
+            <rect x="6" y="6" width="88" height="88" fill="none" stroke="#0a0a0a" stroke-width="2" stroke-dasharray="5 4" rx="6"/>
+            <text x="50" y="46" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" text-anchor="middle" fill="#0a0a0a">YOUR</text>
+            <rect x="46" y="52" width="8" height="8" fill="#fbbf00"/>
+            <text x="50" y="74" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" text-anchor="middle" fill="#0a0a0a">LOGO.</text>
+          </svg>
+          <img id="logoImg" alt="Logo" hidden>
+          <input id="logoFile" type="file" accept="image/*" hidden>
+        </div>
+        <div class="dr-logo-actions">
+          <label class="btn small ghost" for="logoFile">Change</label>
+          <button type="button" class="btn small ghost" id="logoReset">Reset</button>
+        </div>
+      </div>
+      <div class="dr-title-wrap">
+        <input class="dr-title" type="text" name="title" value="Drainage Pressure Test Certificate">
+      </div>
+    </section>
+
+    <section class="dr-rows">
+      <div class="dr-row">
+        <div class="dr-label dr-label-dark">Test Number</div>
+        <input type="text" name="testNumber" class="dr-input">
+      </div>
+      <div class="dr-row">
+        <div class="dr-label dr-label-dark">Project Name/Number</div>
+        <input type="text" name="projectName" class="dr-input">
+      </div>
+      <div class="dr-row dr-row-split">
+        <div class="dr-label dr-label-dark">System Type</div>
+        <label class="dr-check-cell"><span>Pneumatic</span><input type="checkbox" name="systemPneumatic"></label>
+        <label class="dr-check-cell"><span>Hydraulic</span><input type="checkbox" name="systemHydraulic"></label>
+      </div>
+      <div class="dr-row dr-row-split">
+        <div class="dr-label dr-label-dark">System/Test Pressure</div>
+        <input type="text" name="systemPressure" class="dr-input dr-input-center" placeholder="[System]">
+        <input type="text" name="testPressureBase" class="dr-input dr-input-center" placeholder="[Test]">
+      </div>
+    </section>
+
+    <section class="dr-pair">
+      <div class="dr-row">
+        <div class="dr-label dr-label-dark">Date Start</div>
+        <input type="text" name="dateStart" placeholder="DD/MM/YYYY" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}" class="dr-input">
+      </div>
+      <div class="dr-row">
+        <div class="dr-label dr-label-dark">Date Finish</div>
+        <input type="text" name="dateFinish" placeholder="DD/MM/YYYY" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}" class="dr-input">
+      </div>
+    </section>
+
+    <section class="dr-pair">
+      <div class="dr-block">
+        <div class="dr-block-head">Other Information</div>
+        <label class="dr-checkrow"><span>Method Statement available</span><input type="checkbox" name="methodStatement"></label>
+        <label class="dr-checkrow"><span>Risk Assessment available</span><input type="checkbox" name="riskAssessment"></label>
+        <label class="dr-checkrow"><span>Calibration Certificates available</span><input type="checkbox" name="calibrationCerts"></label>
+      </div>
+      <div class="dr-block">
+        <div class="dr-block-head">Tools and Equipment</div>
+        <label class="dr-checkrow"><span>Pressure Gauge</span><input type="checkbox" name="pressureGauge"></label>
+        <label class="dr-checkrow"><span>Handpump &amp; Hoses</span><input type="checkbox" name="handpump"></label>
+        <label class="dr-checkrow"><span>Blanks and bungs</span><input type="checkbox" name="blanksAndBungs"></label>
+      </div>
+    </section>
+
+    <section class="dr-pair">
+      <div class="dr-row">
+        <div class="dr-label dr-label-light">Start Time</div>
+        <input type="text" name="startTime" class="dr-input" placeholder="HH:MM">
+      </div>
+      <div class="dr-row">
+        <div class="dr-label dr-label-light">Finish Time</div>
+        <input type="text" name="finishTime" class="dr-input" placeholder="HH:MM">
+      </div>
+    </section>
+
+    <section class="dr-pair">
+      <div class="dr-row">
+        <div class="dr-label dr-label-light">Test Pressure Start <span class="dr-unit">[bar/psi]</span></div>
+        <input type="text" name="testPressureStart" class="dr-input">
+      </div>
+      <div class="dr-row">
+        <div class="dr-label dr-label-light">Test Pressure Finish <span class="dr-unit">[bar/psi]</span></div>
+        <input type="text" name="testPressureFinish" class="dr-input">
+      </div>
+    </section>
+
+    <section class="dr-pair dr-result">
+      <label class="dr-result-cell" data-result="PASS">
+        <input type="radio" name="result" value="PASS">
+        <span class="dr-result-text">PASS</span>
+      </label>
+      <label class="dr-result-cell" data-result="FAIL">
+        <input type="radio" name="result" value="FAIL">
+        <span class="dr-result-text">FAIL</span>
+      </label>
+    </section>
+
+    <section class="dr-comments">
+      <div class="dr-block-head">Comments</div>
+      <textarea name="comments" rows="6"></textarea>
+    </section>
+
+    <section class="dr-pair dr-sig-row">
+      <div class="dr-sig-cell">
+        <div class="dr-sig-pad" data-sig="signature">
+          <canvas data-sig-canvas="signature"></canvas>
+          <div class="dr-sig-placeholder" data-sig-placeholder="signature">Signature</div>
+        </div>
+        <button type="button" class="btn small ghost dr-sig-clear" data-clear-sig="signature">Clear</button>
+      </div>
+      <div class="dr-sig-cell">
+        <input type="text" name="signatureDate" placeholder="Date" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}" class="dr-date-big">
+      </div>
+    </section>
+
+    <footer class="dr-foot">
+      <span class="dr-foot-num">1</span>
+      <span class="dr-foot-name">Drainage Pressure Test Certificate</span>
+    </footer>
+
+  </form>
+</main>
+
+<script src="drainage.js"></script>
+</body>
+</html>
