@@ -4,8 +4,9 @@
   var STORAGE_KEY = "gsr.records.v1";
 
   var TYPE_META = {
-    "landlord-homeowner": { label: "Landlord / Homeowner", form: "landlord.html" },
-    "non-domestic": { label: "Non-Domestic", form: "record.html" }
+    "landlord-homeowner":      { label: "Landlord / Homeowner",     form: "landlord.html" },
+    "non-domestic":            { label: "Non-Domestic",             form: "record.html" },
+    "drainage-pressure-test":  { label: "Drainage Pressure Test",   form: "drainage.html" }
   };
 
   function loadAll() {
@@ -35,6 +36,7 @@
 
   function recordType(rec) {
     if (rec.type && TYPE_META[rec.type]) return rec.type;
+    if (rec.testNumber || rec.testPressureStart || rec.systemPneumatic || rec.systemHydraulic) return "drainage-pressure-test";
     if (rec.installationAddress || rec.landlordHomeowner || rec.defects) return "landlord-homeowner";
     return "non-domestic";
   }
@@ -44,6 +46,8 @@
       || rec.siteName
       || rec.siteAddress
       || rec.landlordHomeowner
+      || rec.projectName
+      || rec.testNumber
       || "Untitled";
   }
 
@@ -55,10 +59,16 @@
   }
 
   function recordDate(rec) {
-    return rec.inspectionDate || rec.date || "";
+    return rec.inspectionDate || rec.date || rec.dateStart || rec.dateFinish || "";
   }
 
   function statusOf(rec) {
+    if (recordType(rec) === "drainage-pressure-test") {
+      var r = (rec.result || "").toUpperCase();
+      if (r === "PASS") return { label: "Pass", cls: "pass" };
+      if (r === "FAIL") return { label: "Fail", cls: "fail" };
+      return { label: "Draft", cls: "" };
+    }
     var appliances = rec.appliances || [];
     if (!appliances.length) return { label: "Draft", cls: "" };
     var anyFail = appliances.some(function (a) {
