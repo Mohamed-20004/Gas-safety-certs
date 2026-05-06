@@ -515,6 +515,15 @@ html { scroll-behavior: smooth; }
   .ll-page2 { break-before: page; }
 }
 
+/* Global print rule: collapse the browser's default URL / title /
+   page-number header & footer by zeroing the @page margin.
+   Each cert's own .cert-page / .page padding handles the inner
+   white space so the content isn't pushed to the paper edge. */
+@media print {
+  @page { margin: 0; }
+  html, body { margin: 0 !important; padding: 0 !important; }
+}
+
 /* =========================================================
    Non-domestic record cert theme — A4 landscape template
    ========================================================= */
