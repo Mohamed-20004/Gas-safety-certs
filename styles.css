@@ -1061,11 +1061,11 @@ body.drainage .cert-page select {
 .dr-sig-cell {
   border: 1px solid var(--dr-ink); background: #fff;
   display: flex; flex-direction: column;
-  min-height: 38px; position: relative;
+  height: 44px; position: relative;
 }
 .dr-sig-pad {
   flex: 1; position: relative; touch-action: none;
-  resize: vertical; overflow: hidden; min-height: 30px;
+  overflow: hidden; min-height: 0;
 }
 .dr-sig-pad canvas { display: block; width: 100%; height: 100%; cursor: crosshair; touch-action: none; }
 .dr-sig-placeholder {
@@ -1082,7 +1082,7 @@ body.drainage .cert-page select {
 .dr-date-big {
   border: 0; background: transparent; width: 100%; height: 100%;
   text-align: center; font-size: 14px; font-weight: 600; color: var(--dr-ink);
-  font-family: inherit; padding: 6px 10px;
+  font-family: inherit; padding: 4px 10px;
   transition: background 0.12s, box-shadow 0.12s;
 }
 .dr-date-big:focus { outline: none; box-shadow: inset 0 0 0 2px var(--dr-ink); background: #fffbe6; }
@@ -1103,9 +1103,9 @@ body.drainage .cert-page select {
   .dr-title { font-size: 22px; }
   .dr-row, .dr-row-split { grid-template-columns: 1fr !important; }
   .dr-pair { grid-template-columns: 1fr; }
-  .dr-result-text { font-size: 24px; }
-  .dr-date-big { font-size: 26px; }
-  .dr-sig-placeholder { font-size: 26px; }
+  .dr-result-text { font-size: 18px; }
+  .dr-date-big { font-size: 14px; }
+  .dr-sig-placeholder { font-size: 13px; }
 }
 
 @media print {
