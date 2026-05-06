@@ -59,6 +59,10 @@
         <div class="dr-label dr-label-dark">Project Name/Number</div>
         <input type="text" name="projectName" class="dr-input">
       </div>
+      <div class="dr-row">
+        <div class="dr-label dr-label-dark">Section / Area Tested</div>
+        <input type="text" name="sectionTested" class="dr-input" placeholder="e.g. Ground floor, WT to WC, 110mm uPVC">
+      </div>
       <div class="dr-row dr-row-split">
         <div class="dr-label dr-label-dark">System Type</div>
         <label class="dr-check-cell"><span>Pneumatic</span><input type="checkbox" name="systemPneumatic"></label>
@@ -68,6 +72,43 @@
         <div class="dr-label dr-label-dark">System/Test Pressure</div>
         <input type="text" name="systemPressure" class="dr-input dr-input-center" placeholder="[System]">
         <input type="text" name="testPressureBase" class="dr-input dr-input-center" placeholder="[Test]">
+      </div>
+      <div class="dr-row dr-row-split">
+        <div class="dr-label dr-label-dark">Pipe Material / Diameter</div>
+        <select name="pipeMaterial" class="dr-input dr-input-center">
+          <option value="">— Material —</option>
+          <option>uPVC</option>
+          <option>HDPE</option>
+          <option>Cast Iron</option>
+          <option>Clay</option>
+          <option>MuPVC</option>
+          <option>ABS</option>
+          <option>Other</option>
+        </select>
+        <input type="text" name="pipeDiameter" class="dr-input dr-input-center" placeholder="Diameter (mm)">
+      </div>
+      <div class="dr-row dr-row-split">
+        <div class="dr-label dr-label-dark">Test Method &amp; Allowable Drop</div>
+        <select name="testMethod" class="dr-input dr-input-center">
+          <option value="">— Method —</option>
+          <option value="LA">LA — 10 mbar / 2.5 mbar drop</option>
+          <option value="LB">LB — 50 mbar / 10 mbar drop</option>
+          <option value="LC">LC — 100 mbar / 15 mbar drop</option>
+          <option value="LD">LD — 200 mbar / 25 mbar drop</option>
+          <option value="W">W — Water test</option>
+        </select>
+        <input type="text" name="allowableDrop" class="dr-input dr-input-center" placeholder="Allowable drop">
+      </div>
+      <div class="dr-row">
+        <div class="dr-label dr-label-dark">Standard Tested To</div>
+        <select name="standard" class="dr-input">
+          <option value="">— Standard —</option>
+          <option>BS EN 1610</option>
+          <option>BS EN 12056</option>
+          <option>BS 8000-13</option>
+          <option>Project specification</option>
+          <option>Other</option>
+        </select>
       </div>
     </section>
 
@@ -119,10 +160,44 @@
       </div>
     </section>
 
-    <section class="dr-pair dr-result">
+    <section class="dr-pair">
+      <div class="dr-row">
+        <div class="dr-label dr-label-dark">Ambient Temperature</div>
+        <input type="text" name="ambientTemp" class="dr-input" placeholder="e.g. 12 °C">
+      </div>
+      <div class="dr-row">
+        <div class="dr-label dr-label-dark">Weather Conditions</div>
+        <input type="text" name="weather" class="dr-input" placeholder="e.g. Overcast, dry">
+      </div>
+    </section>
+
+    <section class="dr-pair">
+      <div class="dr-row">
+        <div class="dr-label dr-label-dark">Gauge Serial Number</div>
+        <input type="text" name="gaugeSerial" class="dr-input">
+      </div>
+      <div class="dr-row">
+        <div class="dr-label dr-label-dark">Gauge Calibration Expiry</div>
+        <input type="text" name="gaugeCalibrationExpiry" placeholder="DD/MM/YYYY" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}" class="dr-input">
+      </div>
+    </section>
+
+    <section class="dr-pair">
+      <div class="dr-row">
+        <div class="dr-label dr-label-dark">Drawing / Plan Reference</div>
+        <input type="text" name="drawingRef" class="dr-input" placeholder="e.g. M-201 Rev C, sheet 3">
+      </div>
+      <div class="dr-row">
+        <div class="dr-label dr-label-dark">Retest of Test No.</div>
+        <input type="text" name="retestOf" class="dr-input" placeholder="Original test number (if retest)">
+      </div>
+    </section>
+
+    <section class="dr-pair dr-result" id="resultSection">
       <label class="dr-result-cell" data-result="PASS">
         <input type="radio" name="result" value="PASS">
         <span class="dr-result-text">PASS</span>
+        <span class="dr-result-lock-msg" aria-hidden="true">Locked — measured drop exceeds allowable</span>
       </label>
       <label class="dr-result-cell" data-result="FAIL">
         <input type="radio" name="result" value="FAIL">
@@ -130,21 +205,69 @@
       </label>
     </section>
 
+    <section class="dr-reason" id="reasonForFail" hidden>
+      <div class="dr-block">
+        <div class="dr-block-head">Reason for Fail / Remedial Action Required</div>
+        <textarea name="reasonForFail" rows="3" placeholder="Describe what failed and the remedial action required."></textarea>
+      </div>
+    </section>
+
     <section class="dr-comments">
       <div class="dr-block-head">Comments</div>
       <textarea name="comments" rows="6"></textarea>
     </section>
 
-    <section class="dr-pair dr-sig-row">
-      <div class="dr-sig-cell">
-        <div class="dr-sig-pad" data-sig="signature">
-          <canvas data-sig-canvas="signature"></canvas>
-          <div class="dr-sig-placeholder" data-sig-placeholder="signature">Signature</div>
+    <section class="dr-signoff">
+      <div class="dr-signoff-block">
+        <div class="dr-block-head">Tested By</div>
+        <div class="dr-signoff-fields">
+          <div class="dr-row dr-row-stacked">
+            <div class="dr-label dr-label-light">Name</div>
+            <input type="text" name="testedByName" class="dr-input">
+          </div>
+          <div class="dr-row dr-row-stacked">
+            <div class="dr-label dr-label-light">Company</div>
+            <input type="text" name="testedByCompany" class="dr-input">
+          </div>
+          <div class="dr-row dr-row-stacked">
+            <div class="dr-label dr-label-light">Role</div>
+            <input type="text" name="testedByRole" class="dr-input">
+          </div>
         </div>
-        <button type="button" class="btn small ghost dr-sig-clear" data-clear-sig="signature">Clear</button>
+        <div class="dr-sig-cell">
+          <div class="dr-sig-pad" data-sig="testedBy">
+            <canvas data-sig-canvas="testedBy"></canvas>
+            <div class="dr-sig-placeholder" data-sig-placeholder="testedBy">Signature</div>
+          </div>
+          <button type="button" class="btn small ghost dr-sig-clear" data-clear-sig="testedBy">Clear</button>
+        </div>
+        <input type="text" name="testedByDate" placeholder="Date — DD/MM/YYYY" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}" class="dr-input dr-signoff-date">
       </div>
-      <div class="dr-sig-cell">
-        <input type="text" name="signatureDate" placeholder="Date" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}" class="dr-date-big">
+
+      <div class="dr-signoff-block">
+        <div class="dr-block-head">Witnessed By</div>
+        <div class="dr-signoff-fields">
+          <div class="dr-row dr-row-stacked">
+            <div class="dr-label dr-label-light">Name</div>
+            <input type="text" name="witnessName" class="dr-input">
+          </div>
+          <div class="dr-row dr-row-stacked">
+            <div class="dr-label dr-label-light">Company</div>
+            <input type="text" name="witnessCompany" class="dr-input">
+          </div>
+          <div class="dr-row dr-row-stacked">
+            <div class="dr-label dr-label-light">Role</div>
+            <input type="text" name="witnessRole" class="dr-input" placeholder="Site manager, M&amp;E consultant, etc.">
+          </div>
+        </div>
+        <div class="dr-sig-cell">
+          <div class="dr-sig-pad" data-sig="witness">
+            <canvas data-sig-canvas="witness"></canvas>
+            <div class="dr-sig-placeholder" data-sig-placeholder="witness">Signature</div>
+          </div>
+          <button type="button" class="btn small ghost dr-sig-clear" data-clear-sig="witness">Clear</button>
+        </div>
+        <input type="text" name="witnessDate" placeholder="Date — DD/MM/YYYY" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}" class="dr-input dr-signoff-date">
       </div>
     </section>
 
