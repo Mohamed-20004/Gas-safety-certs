@@ -300,12 +300,90 @@
       var serial = serialEl && serialEl.value ? serialEl.value : "";
       var slug = (cfg.prefix + (serial ? "_" + serial : ""))
         .replace(/[^a-z0-9_\-]+/gi, "_");
-      doc.save(slug + ".pdf");
       cleanup();
+      finishSave(doc, slug + ".pdf");
     }).catch(function (err) {
       cleanup();
       alert("Could not generate the PDF: " + (err && err.message ? err.message : err));
     });
+  }
+
+  // ---- delivery ------------------------------------------------------
+  // iOS Safari blocks downloads that fire seconds after the tap (the
+  // "user activation" has expired by the time the capture finishes),
+  // so jsPDF's automatic save opens a dead blank tab instead. On iOS
+  // we show a "PDF ready" panel: the user's tap on Save/Share is a
+  // fresh gesture, which makes the native share sheet (with Save to
+  // Files) work reliably. Desktop keeps the direct download.
+
+  function isIOS() {
+    return /iP(ad|hone|od)/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  }
+
+  function finishSave(doc, name) {
+    if (!isIOS()) { doc.save(name); return; }
+    showSaveSheet(doc.output("blob"), name);
+  }
+
+  function showSaveSheet(blob, name) {
+    var url = URL.createObjectURL(blob);
+    var scrim = document.createElement("div");
+    scrim.style.cssText =
+      "position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:99999;" +
+      "display:flex;align-items:center;justify-content:center;padding:20px;";
+    var card = document.createElement("div");
+    card.style.cssText =
+      "background:#fff;border-radius:14px;padding:22px 24px;max-width:340px;" +
+      "width:100%;font-family:inherit;box-shadow:0 12px 40px rgba(0,0,0,0.3);text-align:center;";
+    var title = document.createElement("div");
+    title.style.cssText = "font-weight:700;font-size:16px;margin-bottom:4px;color:#0a0a0a;";
+    title.textContent = "PDF ready";
+    var sub = document.createElement("div");
+    sub.style.cssText = "font-size:12px;color:#666;word-break:break-all;margin-bottom:14px;";
+    sub.textContent = name;
+    card.appendChild(title);
+    card.appendChild(sub);
+
+    function mkBtn(label, primary) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = label;
+      b.style.cssText =
+        "display:block;width:100%;margin:8px 0;padding:12px;border-radius:8px;" +
+        "font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid " +
+        (primary ? "#0a0a0a;background:#0a0a0a;color:#fff;" : "#d6d6d6;background:#fff;color:#0a0a0a;");
+      return b;
+    }
+
+    var canShareFile = false;
+    try {
+      var probe = new File([blob], name, { type: "application/pdf" });
+      canShareFile = !!(navigator.canShare && navigator.canShare({ files: [probe] }));
+    } catch (e) {}
+
+    if (canShareFile) {
+      var shareBtn = mkBtn("Save / Share…", true);
+      shareBtn.addEventListener("click", function () {
+        var file = new File([blob], name, { type: "application/pdf" });
+        navigator.share({ files: [file] }).catch(function () {});
+      });
+      card.appendChild(shareBtn);
+    }
+
+    var openBtn = mkBtn("Open PDF", !canShareFile);
+    openBtn.addEventListener("click", function () { window.open(url, "_blank"); });
+    card.appendChild(openBtn);
+
+    var closeBtn = mkBtn("Close", false);
+    closeBtn.addEventListener("click", function () {
+      scrim.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
+    });
+    card.appendChild(closeBtn);
+
+    scrim.appendChild(card);
+    document.body.appendChild(scrim);
   }
 
   document.addEventListener("DOMContentLoaded", function () {
