@@ -10,6 +10,7 @@
     landlord: {
       target: ".cert-page",
       splitAt: "#sec-appliances",
+      fillRows: "#applianceBody > tr.ll-appl-main",
       orientation: "landscape",
       prefix: "Landlord_Gas_Safety_Record",
       serialField: 'input[name="serialNumber"]'
@@ -193,9 +194,11 @@
     var prevZoom = el.style.zoom;
     var prevWidth = el.style.width;
     var prevMaxWidth = el.style.maxWidth;
+    var grownRows = [];
     el.style.zoom = "1";
 
     function cleanup() {
+      grownRows.forEach(function (pair) { pair[0].style.height = pair[1]; });
       el.style.zoom = prevZoom;
       el.style.width = prevWidth;
       el.style.maxWidth = prevMaxWidth;
@@ -212,6 +215,24 @@
     tuneWidth(el, cfg, pageW / pageH);
 
     var splitY = cfg.splitAt ? measureSlice1Height(el, cfg.splitAt) : null;
+
+    // Grow the appliance rows so the second page fills A4 naturally —
+    // taller rows with crisp text instead of a vertically stretched
+    // bitmap.
+    if (cfg.fillRows && splitY != null) {
+      var target2H = el.offsetWidth * (pageH / pageW);
+      var deficit = target2H - (el.offsetHeight - splitY);
+      if (deficit > 40) {
+        var rows = document.querySelectorAll(cfg.fillRows);
+        if (rows.length) {
+          var extra = deficit / rows.length;
+          for (var ri = 0; ri < rows.length; ri++) {
+            grownRows.push([rows[ri], rows[ri].style.height]);
+            rows[ri].style.height = (rows[ri].offsetHeight + extra) + "px";
+          }
+        }
+      }
+    }
 
     // Cap the capture scale so the canvas stays under iOS Safari's
     // ~16.7M-pixel limit on very tall certs.

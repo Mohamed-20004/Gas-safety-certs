@@ -1263,3 +1263,10 @@ body.pdf-capture .dr-logo-actions,
 body.pdf-capture .dr-sig-clear {
   visibility: hidden !important;
 }
+
+/* Remove the appliance delete-button column from the capture so the
+   PDF doesn't carry an empty strip down its right edge. */
+body.pdf-capture .ll-appl-table thead th:last-child,
+body.pdf-capture .ll-appl-table td.ll-appl-del {
+  display: none !important;
+}
