@@ -468,6 +468,23 @@
            d.getFullYear();
   }
 
+  // Pre-fill the next serial number: scan saved records of this type,
+  // find the highest trailing number, and continue the sequence.
+  function nextSerial(field, type) {
+    var bestPrefix = null, bestDigits = null, bestNum = -1;
+    loadAll().forEach(function (r) {
+      if ((r.type || "") !== type) return;
+      var m = String(r[field] || "").trim().match(/^(.*?)(\d+)$/);
+      if (!m) return;
+      var n = parseInt(m[2], 10);
+      if (n > bestNum) { bestNum = n; bestPrefix = m[1]; bestDigits = m[2]; }
+    });
+    if (bestNum < 0) return "";
+    var next = String(bestNum + 1);
+    while (next.length < bestDigits.length) next = "0" + next;
+    return bestPrefix + next;
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     pads.issued = setupSignaturePad("issued");
     pads.received = setupSignaturePad("received");
@@ -539,5 +556,7 @@
     var t = todayDDMM();
     var insp = form.querySelector('[name="inspectionDate"]');
     if (insp && !insp.value) insp.value = t;
+    var serialEl = form.querySelector('[name="serialNumber"]');
+    if (serialEl && !serialEl.value) serialEl.value = nextSerial("serialNumber", "non-domestic");
   });
 })();
