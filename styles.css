@@ -1245,3 +1245,21 @@ body.drainage .cert-page select.dr-input {
   }
   .dr-input, .dr-comments textarea, .dr-date-big { box-shadow: none !important; }
 }
+
+/* =========================================================
+   PDF capture (Save PDF button) — hide interactive-only
+   controls while html2canvas snapshots the cert. visibility
+   (not display) so nothing shifts position mid-capture.
+   ========================================================= */
+body.pdf-capture [data-clear-sig],
+body.pdf-capture .ll-logo-actions,
+body.pdf-capture .ll-page2-actions,
+body.pdf-capture .ll-appl-table .ll-appl-del button,
+body.pdf-capture .ll-resize-handle,
+body.pdf-capture .rec-logo-actions,
+body.pdf-capture .rec-sig-clear,
+body.pdf-capture .rec-resizer,
+body.pdf-capture .dr-logo-actions,
+body.pdf-capture .dr-sig-clear {
+  visibility: hidden !important;
+}
