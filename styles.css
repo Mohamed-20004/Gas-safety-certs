@@ -1270,3 +1270,12 @@ body.pdf-capture .ll-appl-table thead th:last-child,
 body.pdf-capture .ll-appl-table td.ll-appl-del {
   display: none !important;
 }
+
+/* Empty signature boxes print empty — no "Sign here" hint — and the
+   add-appliance action bar gives its space back to the table. */
+body.pdf-capture .ll-sig-placeholder,
+body.pdf-capture .rec-sig-placeholder,
+body.pdf-capture .dr-sig-placeholder,
+body.pdf-capture .ll-page2-actions {
+  display: none !important;
+}

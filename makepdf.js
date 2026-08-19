@@ -53,7 +53,10 @@
     "borderTopColor", "borderRightColor", "borderBottomColor", "borderLeftColor",
     "borderTopLeftRadius", "borderTopRightRadius",
     "borderBottomLeftRadius", "borderBottomRightRadius",
-    "backgroundColor", "backgroundImage"
+    "backgroundColor"
+    // Deliberately NOT backgroundImage: select chevron gradients
+    // would blow up to fill the replacement block, and decorative
+    // arrows have no place on a printed cert anyway.
   ];
 
   function makeTextBlock(origEl, doc) {
@@ -62,13 +65,26 @@
     STYLE_PROPS.forEach(function (p) { div.style[p] = cs[p]; });
     div.style.boxSizing = "border-box";
     div.style.width = origEl.offsetWidth + "px";
-    div.style.height = origEl.offsetHeight + "px";
     div.style.overflow = "hidden";
     div.style.display = "flex";
     div.style.flexDirection = "column";
 
     var isTextarea = origEl.tagName === "TEXTAREA";
-    div.style.justifyContent = isTextarea ? "flex-start" : "center";
+
+    // Inside a table cell the replacement may use the cell's full
+    // height and wrap, so long values (e.g. appliance models) show
+    // in full instead of clipping like a scrolled input.
+    var parent = origEl.parentElement;
+    var inCell = !!(parent && (parent.tagName === "TD" || parent.tagName === "TH"));
+    var h = origEl.offsetHeight;
+    if (inCell) {
+      var pcs = window.getComputedStyle(parent);
+      var inner_h = parent.clientHeight -
+        (parseFloat(pcs.paddingTop) || 0) - (parseFloat(pcs.paddingBottom) || 0);
+      h = Math.max(h, inner_h);
+    }
+    div.style.height = h + "px";
+    div.style.justifyContent = (isTextarea && !inCell) ? "flex-start" : "center";
 
     var value = "";
     if (origEl.tagName === "SELECT") {
@@ -80,8 +96,8 @@
 
     var inner = doc.createElement("div");
     inner.style.width = "100%";
-    inner.style.whiteSpace = isTextarea ? "pre-wrap" : "nowrap";
-    inner.style.wordBreak = isTextarea ? "break-word" : "normal";
+    inner.style.whiteSpace = isTextarea ? "pre-wrap" : (inCell ? "normal" : "nowrap");
+    inner.style.wordBreak = (isTextarea || inCell) ? "break-word" : "normal";
     inner.style.textAlign = cs.textAlign;
     inner.style.lineHeight = isTextarea ? "1.45" : "1.2";
     inner.textContent = value;
