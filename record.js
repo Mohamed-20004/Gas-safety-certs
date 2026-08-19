@@ -4,6 +4,7 @@
   var STORAGE_KEY = "gsr.records.v1";
   var DENSITY_KEY = "gsr.record.density";
   var COL_KEY = "gsr.record.colWidths";
+  var SERIAL_START = 21002; // non-domestic serial sequence begins here
 
   // Appliance columns: 8 free-text + 5 selects (last one Pass/N/A, rest Yes/No/N/A)
   var APPLIANCE_FIELDS = [
@@ -557,6 +558,11 @@
     var insp = form.querySelector('[name="inspectionDate"]');
     if (insp && !insp.value) insp.value = t;
     var serialEl = form.querySelector('[name="serialNumber"]');
-    if (serialEl && !serialEl.value) serialEl.value = nextSerial("serialNumber", "non-domestic");
+    if (serialEl && !serialEl.value) {
+      var suggested = nextSerial("serialNumber", "non-domestic");
+      var m = suggested.match(/(\d+)$/);
+      if (!m || parseInt(m[1], 10) < SERIAL_START) suggested = String(SERIAL_START);
+      serialEl.value = suggested;
+    }
   });
 })();
