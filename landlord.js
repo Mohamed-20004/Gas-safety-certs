@@ -490,6 +490,19 @@
     return bestPrefix + next;
   }
 
+  // "DD/MM/YYYY" plus exactly one year; 29 Feb maps to 28 Feb when
+  // the target year isn't a leap year.
+  function addOneYear(ddmmyyyy) {
+    var m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(ddmmyyyy || "");
+    if (!m) return "";
+    var d = parseInt(m[1], 10), mo = parseInt(m[2], 10), y = parseInt(m[3], 10) + 1;
+    if (d === 29 && mo === 2) {
+      var leap = (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+      if (!leap) d = 28;
+    }
+    return String(d).padStart(2, "0") + "/" + String(mo).padStart(2, "0") + "/" + y;
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     buildDefects();
     pads.issued = setupSignaturePad("issued");
@@ -531,6 +544,21 @@
       }
     });
 
+    // The top Date drives "Next safety check due by:" — same date,
+    // one year later. A hand-typed due date is never overwritten.
+    var dateEl = document.getElementById("dateField");
+    var nextCheckEl = form.querySelector('[name="nextSafetyCheck"]');
+    function syncNextCheck() {
+      if (!dateEl || !nextCheckEl) return;
+      if (nextCheckEl.dataset.manual === "true") return;
+      var next = addOneYear(dateEl.value);
+      if (next) nextCheckEl.value = next;
+    }
+    if (dateEl) dateEl.addEventListener("input", syncNextCheck);
+    if (nextCheckEl) nextCheckEl.addEventListener("input", function () {
+      nextCheckEl.dataset.manual = "true";
+    });
+
     document.querySelectorAll('input[pattern="\\d{2}/\\d{2}/\\d{4}"]').forEach(function (el) {
       el.addEventListener("input", function () {
         var digits = el.value.replace(/\D/g, "").slice(0, 8);
@@ -551,6 +579,7 @@
       if (rec) { populate(rec); return; }
     }
     document.getElementById("dateField").value = todayDDMM;
+    syncNextCheck();
     var serialEl = document.getElementById("serialNumber");
     if (serialEl && !serialEl.value) {
       var suggested = nextSerial("serialNumber", TYPE);
