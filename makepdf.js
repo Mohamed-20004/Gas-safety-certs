@@ -14,6 +14,7 @@
       orientation: "landscape",
       docLabel: "Gas Safety Cert",
       addressField: '[name="installationAddress"]',
+      postcodeField: '[name="installationPostcode"]',
       serialField: 'input[name="serialNumber"]'
     },
     record: {
@@ -21,6 +22,7 @@
       orientation: "landscape",
       docLabel: "Gas Safety Cert",
       addressField: '[name="siteAddress"]',
+      postcodeField: '[name="sitePostcode"]',
       serialField: '[name="serialNumber"]'
     },
     drainage: {
@@ -326,6 +328,8 @@
 
   function buildFilename(cfg) {
     var addr = cleanFilename(fieldValue(cfg.addressField)).slice(0, 60).trim();
+    var pc = cfg.postcodeField ? cleanFilename(fieldValue(cfg.postcodeField)) : "";
+    if (pc) addr = addr ? addr + ", " + pc : pc;
     var serial = cleanFilename(fieldValue(cfg.serialField));
     var name = (addr ? addr + " - " : "") + cfg.docLabel + (serial ? " (" + serial + ")" : "");
     return name + ".pdf";
