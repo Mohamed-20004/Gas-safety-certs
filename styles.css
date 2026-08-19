@@ -1,3 +1,9 @@
+/* Zero page margin so the browser has no strip to draw its printed
+   URL / title / date header & footer in. Kept at the very top of
+   the file (and duplicated inline in each cert's <head>) because
+   iOS Safari is picky about where it honours @page. */
+@page { margin: 0; }
+
 :root {
   --ink: #000;
   --paper: #fff;
@@ -514,14 +520,6 @@ html { scroll-behavior: smooth; }
   .ll-row > .ll-block, .ll-foot, .ll-disclaimer, .ll-banner { break-inside: avoid; }
   .ll-page2 { break-before: page; }
 }
-
-/* Collapse the browser's URL / title / date print header & footer:
-   with a zero page margin there is no margin strip for the browser
-   to draw them in. @page sits at TOP LEVEL (not nested inside
-   @media print) because iOS Safari ignores nested @page rules.
-   Each cert's own .cert-page / .page padding keeps the content off
-   the paper edge. */
-@page { margin: 0; }
 
 @media print {
   html, body { margin: 0 !important; padding: 0 !important; }
