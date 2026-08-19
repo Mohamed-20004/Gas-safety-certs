@@ -12,19 +12,22 @@
       splitAt: "#sec-appliances",
       fillPad: ".ll-appl-scroll",
       orientation: "landscape",
-      prefix: "Landlord_Gas_Safety_Record",
+      docLabel: "Gas Safety Cert",
+      addressField: '[name="installationAddress"]',
       serialField: 'input[name="serialNumber"]'
     },
     record: {
       target: ".page",
       orientation: "landscape",
-      prefix: "Non_Domestic_Gas_Safety_Record",
+      docLabel: "Gas Safety Cert",
+      addressField: '[name="siteAddress"]',
       serialField: '[name="serialNumber"]'
     },
     drainage: {
       target: ".cert-page",
       orientation: "portrait",
-      prefix: "Drainage_Pressure_Test",
+      docLabel: "Drainage Pressure Test",
+      addressField: '[name="projectName"]',
       serialField: '[name="testNumber"]'
     }
   };
@@ -296,16 +299,36 @@
         addStretchedPage(doc, canvas, pageW, pageH, true);
       }
 
-      var serialEl = document.querySelector(cfg.serialField);
-      var serial = serialEl && serialEl.value ? serialEl.value : "";
-      var slug = (cfg.prefix + (serial ? "_" + serial : ""))
-        .replace(/[^a-z0-9_\-]+/gi, "_");
       cleanup();
-      finishSave(doc, slug + ".pdf");
+      finishSave(doc, buildFilename(cfg));
     }).catch(function (err) {
       cleanup();
       alert("Could not generate the PDF: " + (err && err.message ? err.message : err));
     });
+  }
+
+  // ---- filename ------------------------------------------------------
+  // "ADDRESS OF INSTALLATION - Gas Safety Cert (SERIAL NO).pdf".
+  // Multi-line addresses collapse to one line; only characters that
+  // filesystems genuinely reject are replaced.
+
+  function cleanFilename(s) {
+    return String(s || "")
+      .replace(/[\/\\:*?"<>|#%]/g, "-")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function fieldValue(sel) {
+    var el = document.querySelector(sel);
+    return el && el.value ? el.value : "";
+  }
+
+  function buildFilename(cfg) {
+    var addr = cleanFilename(fieldValue(cfg.addressField)).slice(0, 60).trim();
+    var serial = cleanFilename(fieldValue(cfg.serialField));
+    var name = (addr ? addr + " - " : "") + cfg.docLabel + (serial ? " (" + serial + ")" : "");
+    return name + ".pdf";
   }
 
   // ---- delivery ------------------------------------------------------
