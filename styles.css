@@ -515,12 +515,15 @@ html { scroll-behavior: smooth; }
   .ll-page2 { break-before: page; }
 }
 
-/* Global print rule: collapse the browser's default URL / title /
-   page-number header & footer by zeroing the @page margin.
-   Each cert's own .cert-page / .page padding handles the inner
-   white space so the content isn't pushed to the paper edge. */
+/* Collapse the browser's URL / title / date print header & footer:
+   with a zero page margin there is no margin strip for the browser
+   to draw them in. @page sits at TOP LEVEL (not nested inside
+   @media print) because iOS Safari ignores nested @page rules.
+   Each cert's own .cert-page / .page padding keeps the content off
+   the paper edge. */
+@page { margin: 0; }
+
 @media print {
-  @page { margin: 0; }
   html, body { margin: 0 !important; padding: 0 !important; }
 }
 
