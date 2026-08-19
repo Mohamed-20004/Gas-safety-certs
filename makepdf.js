@@ -10,8 +10,6 @@
     landlord: {
       target: ".cert-page",
       splitAt: "#sec-appliances",
-      fillRows: "#applianceBody > tr.ll-appl-main",
-      fillRowCap: 28,
       fillPad: ".ll-appl-scroll",
       orientation: "landscape",
       prefix: "Landlord_Gas_Safety_Record",
@@ -233,6 +231,16 @@
     var pageH = doc.internal.pageSize.getHeight();
 
     tuneWidth(el, cfg, pageW / pageH);
+
+    // Any textarea whose content overflows its visible box grows to
+    // show everything — rows stay thin unless their content needs
+    // more room. Restored after capture.
+    Array.prototype.forEach.call(el.querySelectorAll("textarea"), function (ta) {
+      if (ta.scrollHeight > ta.clientHeight + 2) {
+        grownRows.push([ta, ta.style.height]);
+        ta.style.height = ta.scrollHeight + "px";
+      }
+    });
 
     var splitY = cfg.splitAt ? measureSlice1Height(el, cfg.splitAt) : null;
 

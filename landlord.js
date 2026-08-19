@@ -113,9 +113,11 @@
       });
       return sel;
     }
-    var inp = document.createElement("input");
-    inp.type = "text"; inp.name = "appliance." + field; inp.value = value || "";
-    return inp;
+    // Auto-growing textarea: one line tall, stretches as the content
+    // wraps (iPad Safari has no drag-resize, so growth is automatic).
+    var ta = document.createElement("textarea");
+    ta.rows = 1; ta.name = "appliance." + field; ta.value = value || "";
+    return ta;
   }
 
   function refreshApplianceNumbers() {
@@ -200,7 +202,7 @@
       var obj = { n: idx + 1 };
       APPLIANCE_FIELDS.forEach(function (field, i) {
         var cell = tr.children[i + 1];
-        var input = cell.querySelector("input, select");
+        var input = cell.querySelector("textarea, input, select");
         obj[field] = input ? input.value : "";
       });
       var coRow = tr.nextElementSibling;
@@ -518,6 +520,16 @@
 
     enableColumnResize(".ll-appl-table");
     enableColumnResize(".ll-pipe-table");
+
+    // Textareas grow to fit their content as the user types — iPad
+    // Safari offers no drag-resize handles, so growth is automatic.
+    document.querySelector(".cert-page").addEventListener("input", function (e) {
+      var t = e.target;
+      if (t && t.tagName === "TEXTAREA") {
+        t.style.height = "auto";
+        t.style.height = t.scrollHeight + "px";
+      }
+    });
 
     document.querySelectorAll('input[pattern="\\d{2}/\\d{2}/\\d{4}"]').forEach(function (el) {
       el.addEventListener("input", function () {
