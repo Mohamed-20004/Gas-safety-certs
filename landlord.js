@@ -154,23 +154,26 @@
     delTd.appendChild(delBtn);
     main.appendChild(delTd);
 
+    // Floating CO-alarm box: one transparent full-width cell holding
+    // a fixed-size card that closes after the third question and
+    // ignores appliance column widths entirely.
     var coRow = document.createElement("tr");
     coRow.className = "ll-co-row";
-    var coLabel = document.createElement("td");
-    coLabel.className = "ll-co-label";
-    coLabel.textContent = "Audible CO Alarm";
-    coRow.appendChild(coLabel);
+    var coTd = document.createElement("td");
+    coTd.className = "ll-co-float";
+    coTd.colSpan = APPLIANCE_FIELDS.length + 2;
 
-    var coCellTd = document.createElement("td");
-    coCellTd.className = "ll-co-cell-td";
-    coCellTd.colSpan = 3;
-    var grid = document.createElement("div");
-    grid.className = "ll-co-cell";
+    var box = document.createElement("div");
+    box.className = "ll-co-box";
+    var coTitle = document.createElement("div");
+    coTitle.className = "ll-co-title";
+    coTitle.textContent = "Audible CO Alarm";
+    box.appendChild(coTitle);
 
     function coBlock(headLabel, name, options) {
-      var sub = document.createElement("div"); sub.className = "ll-co-sub";
-      var head = document.createElement("div"); head.className = "ll-co-sub-head"; head.textContent = headLabel;
-      sub.appendChild(head);
+      var q = document.createElement("div"); q.className = "ll-co-q";
+      var head = document.createElement("div"); head.className = "ll-co-q-head"; head.textContent = headLabel;
+      q.appendChild(head);
       var sel = document.createElement("select"); sel.name = "co." + name;
       options.forEach(function (opt) {
         var o = document.createElement("option");
@@ -178,19 +181,14 @@
         if (opt === co[name]) o.selected = true;
         sel.appendChild(o);
       });
-      sub.appendChild(sel);
-      return sub;
+      q.appendChild(sel);
+      return q;
     }
-    grid.appendChild(coBlock("Approved CO alarm fitted?", "fitted", YN));
-    grid.appendChild(coBlock("Is CO alarm In Date?", "inDate", YN));
-    grid.appendChild(coBlock("CO alarm test satisfactory?", "testOk", YN));
-    coCellTd.appendChild(grid);
-    coRow.appendChild(coCellTd);
-
-    var coEmpty = document.createElement("td");
-    coEmpty.className = "ll-co-empty";
-    coEmpty.colSpan = APPLIANCE_FIELDS.length + 1 - 3;
-    coRow.appendChild(coEmpty);
+    box.appendChild(coBlock("Approved CO alarm fitted?", "fitted", YN));
+    box.appendChild(coBlock("Is CO alarm In Date?", "inDate", YN));
+    box.appendChild(coBlock("CO alarm test satisfactory?", "testOk", YN));
+    coTd.appendChild(box);
+    coRow.appendChild(coTd);
 
     applianceBody.appendChild(main);
     applianceBody.appendChild(coRow);
