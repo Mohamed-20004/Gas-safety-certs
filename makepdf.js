@@ -11,6 +11,8 @@
       target: ".cert-page",
       splitAt: "#sec-appliances",
       fillRows: "#applianceBody > tr.ll-appl-main",
+      fillRowCap: 28,
+      fillPad: ".ll-appl-scroll",
       orientation: "landscape",
       prefix: "Landlord_Gas_Safety_Record",
       serialField: 'input[name="serialNumber"]'
@@ -210,11 +212,13 @@
     var prevZoom = el.style.zoom;
     var prevWidth = el.style.width;
     var prevMaxWidth = el.style.maxWidth;
+    var paddedEl = null, prevPad = "";
     var grownRows = [];
     el.style.zoom = "1";
 
     function cleanup() {
       grownRows.forEach(function (pair) { pair[0].style.height = pair[1]; });
+      if (paddedEl) paddedEl.style.paddingBottom = prevPad;
       el.style.zoom = prevZoom;
       el.style.width = prevWidth;
       el.style.maxWidth = prevMaxWidth;
@@ -232,20 +236,30 @@
 
     var splitY = cfg.splitAt ? measureSlice1Height(el, cfg.splitAt) : null;
 
-    // Grow the appliance rows so the second page fills A4 naturally —
-    // taller rows with crisp text instead of a vertically stretched
-    // bitmap.
-    if (cfg.fillRows && splitY != null) {
+    // Fill page 2 in two steps: give each appliance row a modest,
+    // capped height boost (comfortable writing room, not balloon
+    // boxes), then park whatever space is left as a blank area
+    // between the table and the footer — like the unused part of a
+    // paper pad. No bitmap stretching, so text stays crisp.
+    if (splitY != null && (cfg.fillRows || cfg.fillPad)) {
       var target2H = el.offsetWidth * (pageH / pageW);
       var deficit = target2H - (el.offsetHeight - splitY);
-      if (deficit > 40) {
+      if (deficit > 8 && cfg.fillRows) {
         var rows = document.querySelectorAll(cfg.fillRows);
         if (rows.length) {
-          var extra = deficit / rows.length;
+          var extra = Math.min(deficit / rows.length, cfg.fillRowCap || 28);
           for (var ri = 0; ri < rows.length; ri++) {
             grownRows.push([rows[ri], rows[ri].style.height]);
             rows[ri].style.height = (rows[ri].offsetHeight + extra) + "px";
           }
+          deficit = target2H - (el.offsetHeight - splitY);
+        }
+      }
+      if (deficit > 8 && cfg.fillPad) {
+        paddedEl = document.querySelector(cfg.fillPad);
+        if (paddedEl) {
+          prevPad = paddedEl.style.paddingBottom;
+          paddedEl.style.paddingBottom = Math.round(deficit) + "px";
         }
       }
     }
