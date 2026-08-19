@@ -3,6 +3,7 @@
 
   var STORAGE_KEY = "gsr.records.v1";
   var TYPE = "landlord-homeowner";
+  var SERIAL_START = 5040; // landlord serial sequence begins here
 
   var DEFECT_ROWS = 5;
 
@@ -539,7 +540,12 @@
     }
     document.getElementById("dateField").value = todayDDMM;
     var serialEl = document.getElementById("serialNumber");
-    if (serialEl && !serialEl.value) serialEl.value = nextSerial("serialNumber", TYPE);
+    if (serialEl && !serialEl.value) {
+      var suggested = nextSerial("serialNumber", TYPE);
+      var m = suggested.match(/(\d+)$/);
+      if (!m || parseInt(m[1], 10) < SERIAL_START) suggested = String(SERIAL_START);
+      serialEl.value = suggested;
+    }
     for (var i = 0; i < 5; i++) addApplianceRow();
   });
 })();
